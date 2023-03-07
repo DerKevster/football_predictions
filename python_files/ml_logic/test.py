@@ -57,3 +57,5 @@ def make_BuLi_18_19_df_to_merge():
     footballdata_df_to_merge = BuLi_18_19_df[['Date', 'HomeTeam', 'HC', 'AC', 'HS', 'HST', 'AS', 'AST']]
 
     return footballdata_df_to_merge
+
+make_footballdatauk_DataFrames()
