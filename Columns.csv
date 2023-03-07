@@ -1,20 +1,21 @@
-Key;Description;
-home;Home Team Name;
-away;Away Team Name;
-Date; Date of the game in format="%Y-%m-%d"
-shots_h;Shots on Target (Last 5 Games) (Home Team);
-goals_h;Goals Scored (Last 5 Games) (Home Team);
-corner_h;Corners (L5G) (Home Team);
-goaldiff_h;Goal Difference (Season) (Home Team);
-opp_avg_h;Average Goal Difference (Season) of last 5 opponents (Home Team);
-value_h;Squad Value (Home Team);
-shots_a;Shots on Target (Last 5 Games) (Away Team);
-goals_a;Goals Scored (Last 5 Games) (Away Team);
-conc_a;Goals Conceided (L5G) (Away Team);
-corner_a;Corners (L5G) (Away Team);
-goaldiff_a;Goal Difference (Season) (Away Team);
-opp_avg_a;Average Goal Difference (Season) of last 5 oponents (Away Team);
-value_a;Squad Value (Away Team);
-win_home;Home Win (0 or 1);
-draw;Draw (0 or 1);
-win_away;Away Win (0 or 1);
+Key;Description;Timeframe;Team;Type;Format
+home;Home Team Name;;;str;
+away;Away Team Name;;;str;
+Date;Date of the game in;;;str;%Y-%m-%d
+shots_h;Shots on Target;Last 5 Games;Home Team;int;
+goals_h;Goals Scored;Last 5 Games;Home Team;int;
+conc_h;Goals Conceided;Last 5 Games;Home Team;int;
+corner_h;Corners;Last 5 Games;Home Team;int;
+goaldiff_h;Goal Difference;Whole Season;Home Team;int;
+opp_avg_h;Average Goal Difference of last 5 oponents;Whole Season;Home Team;float;
+value_h;Squad Value;Max Value in Season;Home Team;int;
+shots_a;Shots on Target;Last 5 Games;Away Team;int;
+goals_a;Goals Scored;Last 5 Games;Away Team;int;
+conc_a;Goals Conceided;Last 5 Games;Away Team;int;
+corner_a;Corners;Last 5 Games;Away Team;int;
+goaldiff_a;Goal Difference;Whole Season;Away Team;;
+opp_avg_a;Average Goal Difference of last 5 oponents;Whole Season;Away Team;float;
+value_a;Squad Value;Max Value in Season;Away Team;int;
+win_home;Home Win;;;int;[0, 1]
+draw;Draw;;;int;[0, 1]
+win_away;Away Win;;;int;[0, 1]
