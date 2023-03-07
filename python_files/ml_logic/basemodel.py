@@ -3,14 +3,21 @@ from xgboost import XGBClassifier
 from sklearn.model_selection import RandomizedSearchCV, cross_val_score, train_test_split
 from sklearn.metrics import accuracy_score
 
-def get_validation(data):
+def get_model(data):
+
     data = data.drop(columns=['home', 'away', 'date'])
 
     X = data.drop(columns=['win_home', 'draw', 'win_away'])
     y = data[['win_home', 'draw', 'win_away']]
 
     xgb = XGBClassifier(max_depth=10, n_estimators=100, learning_rate=0.1, objective='multi:softmax', num_class=3, random_state=42)
-    xgb.fit(X, y)
+    model = xgb.fit(X, y)
+
+    return model
+
+def get_validation(data):
+
+    xgb = get_model(data)
 
     scores = cross_val_score(xgb, X, y, cv=5, scoring='accuracy')
 
@@ -24,3 +31,9 @@ def get_validation(data):
 
     rgs.fit()
     return print(f'The mean accuracy score is {scores.mean()}') and print(f'the best parameters are {rgs.results(gs=rgs, print_all=False)}')
+
+def get_prediction(data, X_test):
+
+    xgb = get_model(data)
+
+    return xgb.predict(X_test)
