@@ -1,0 +1,23 @@
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+import seaborn as sns
+
+# Create TEST DATAFRAME
+
+columns = pd.read_csv("~/code/DerKevster/football_predictions/Columns.csv", delimiter=';').iloc[:,:2]
+data = pd.DataFrame(columns=columns['Key'])
+for i in list(columns['Key']):
+    data[i] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+# Apply Standard Scaler
+
+scaler = StandardScaler()
+
+scaled_df = scaler.fit_transform(data)
+scaled_df = pd.DataFrame(scaled_df, columns=data.columns)
+
+# Showing the Correlation Matrix
+
+correlation_matrix = data.corr()
+column_names = correlation_matrix.columns
+sns.heatmap(correlation_matrix, xticklabels=column_names, yticklabels=column_names,cmap= "bwr");
