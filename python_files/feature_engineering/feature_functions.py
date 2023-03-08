@@ -4,16 +4,16 @@ import numpy as np
 
 df = make_merged_df()
 
-def make_past_rounds_df(round_, df, past_rounds):
-    prev_round_df = df.loc[df['round'] == round_-1]
+def make_past_rounds_df(matchday, df, past_rounds):
+    prev_round_df = df.loc[df['round'] == matchday-1]
     past_rounds_df = pd.DataFrame()
 
-    if round_ - past_rounds > 0:
+    if matchday - past_rounds > 0:
         if past_rounds == 1:
             return prev_round_df
         else:
             for i in range(past_rounds):
-                next_past_rounds_df = df.loc[df['round'] == round_-1-i]
+                next_past_rounds_df = df.loc[df['round'] == matchday-1-i]
                 if i == 0:
                     past_rounds_df = prev_round_df
                 else:
@@ -22,8 +22,8 @@ def make_past_rounds_df(round_, df, past_rounds):
         print("Error: The past rounds you are asking for do not exist")
     return past_rounds_df
 
-def get_goals(team, round_, df, past_rounds):
-    past_rounds_df = make_past_rounds_df(round_, df, past_rounds)
+def get_goals(team, matchday, df, past_rounds):
+    past_rounds_df = make_past_rounds_df(matchday, df, past_rounds)
     goals = 0
     for i in range(len(past_rounds_df)):
         current_game = past_rounds_df.iloc[i, :]
@@ -34,8 +34,8 @@ def get_goals(team, round_, df, past_rounds):
         #print(current_game)
     return goals
 
-def get_conc(team, round_, df, past_rounds):
-    past_rounds_df = make_past_rounds_df(round_, df, past_rounds)
+def get_conc(team, matchday, df, past_rounds):
+    past_rounds_df = make_past_rounds_df(matchday, df, past_rounds)
     goals = 0
     for i in range(len(past_rounds_df)):
         current_game = past_rounds_df.iloc[i, :]
@@ -45,8 +45,8 @@ def get_conc(team, round_, df, past_rounds):
             goals += current_game['home_club_goals']
     return goals
 
-def get_corner(team, round_, df, past_rounds):
-    past_rounds_df = make_past_rounds_df(round_, df, past_rounds)
+def get_corner(team, matchday, df, past_rounds):
+    past_rounds_df = make_past_rounds_df(matchday, df, past_rounds)
     goals = 0
     for i in range(len(past_rounds_df)):
         current_game = past_rounds_df.iloc[i, :]
@@ -56,8 +56,8 @@ def get_corner(team, round_, df, past_rounds):
             goals += current_game['AC']
     return goals
 
-def get_shots(team, round_, df, past_rounds):
-    past_rounds_df = make_past_rounds_df(round_, df, past_rounds)
+def get_shots(team, matchday, df, past_rounds):
+    past_rounds_df = make_past_rounds_df(matchday, df, past_rounds)
     goals = 0
     for i in range(len(past_rounds_df)):
         current_game = past_rounds_df.iloc[i, :]
@@ -67,8 +67,8 @@ def get_shots(team, round_, df, past_rounds):
             goals += current_game['AS']
     return goals
 
-def get_targets(team, round_, df, past_rounds):
-    past_rounds_df = make_past_rounds_df(round_, df, past_rounds)
+def get_targets(team, matchday, df, past_rounds):
+    past_rounds_df = make_past_rounds_df(matchday, df, past_rounds)
     goals = 0
     for i in range(len(past_rounds_df)):
         current_game = past_rounds_df.iloc[i, :]
@@ -78,8 +78,8 @@ def get_targets(team, round_, df, past_rounds):
             goals += current_game['AST']
     return goals
 
-def get_goal_diff(team, round_, df):
-    past_rounds_df = make_past_rounds_df(round_, df, (round_-1))
+def get_goal_diff(team, matchday, df):
+    past_rounds_df = make_past_rounds_df(matchday, df, (matchday-1))
     goal_diff = 0
     for i in range(len(past_rounds_df)):
         current_game = past_rounds_df.iloc[i, :]
@@ -90,8 +90,8 @@ def get_goal_diff(team, round_, df):
         #print(current_game)
     return goal_diff
 
-def get_opp_avg(team, round_, df):
-    past_rounds_df = make_past_rounds_df(round_, df, past_rounds)
+def get_opp_avg(team, matchday, past_rounds, df):
+    past_rounds_df = make_past_rounds_df(matchday, df, past_rounds)
 
     oppos = []
     for i in range(len(past_rounds_df)):
@@ -101,7 +101,7 @@ def get_opp_avg(team, round_, df):
         elif current_game['away_team'] == team:
             oppos.append(current_game['HomeTeam'])
 
-    oppos_goaldiff = [get_goal_diff(oppo, round_, df) for oppo in oppos]
+    oppos_goaldiff = [get_goal_diff(oppo, matchday, df) for oppo in oppos]
     return oppos_goaldiff.mean()
 
 def get_squad_value(club_name):
