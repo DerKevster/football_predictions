@@ -13,7 +13,7 @@ def make_dataframe_row(home, away, matchday, df):
     dicto = {'goals_h':ff.get_goals(home, matchday, df, 5)}
     dicto = {'conc_h':ff.get_conc(home, matchday, df, 5)}
     dicto = {'corner_h':ff.get_corner(home, matchday, df, 5)}
-    dicto = {'goaldiff_h':ff.get_goal_diff(home, df)}
+    dicto = {'goaldiff_h':ff.get_goal_diff(home, matchday, df)}
     dicto = {'opp_avg_h':ff.get_opp_avg(home, matchday, df, 5)}
     dicto = {'value_h':ff.get_squad_value(home)}
     dicto = {'targets_a':ff.get_targets(away, matchday, df, 5)}
@@ -21,7 +21,7 @@ def make_dataframe_row(home, away, matchday, df):
     dicto = {'goals_a':ff.get_goals(away, matchday, df, 5)}
     dicto = {'conc_a':ff.get_conc(away, matchday, df, 5)}
     dicto = {'corner_a':ff.get_corner(away, matchday, df, 5)}
-    dicto = {'goaldiff_a':ff.get_goal_diff(away, df)}
+    dicto = {'goaldiff_a':ff.get_goal_diff(home, matchday, df)}
     dicto = {'opp_avg_a':ff.get_opp_avg(away, matchday, df, 5)}
     dicto = {'value_a':ff.get_squad_value(away)}
     dicto = {'win_home':ff.get_win_home(home, away, matchday, df)}
