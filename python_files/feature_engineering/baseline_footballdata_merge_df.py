@@ -18,7 +18,7 @@ def make_footballdatauk_DataFrames():
         file_count = len(files)
         # appned dfs to dict using file names as keys
         for i in range(file_count):
-            dataframes[files[i]] = pd.read_csv(os.path.join(os.getcwd(), "raw_data", "football-data_co_uk", files[i]))
+            dataframes[files[i]] = pd.read_csv(os.path.join(HOME, "code", "DerKevster", "football_predictions", "raw_data", "football-data_co_uk", files[i]))
     return dataframes
 
 def make_transfermarkt_DataFrames():
@@ -30,7 +30,7 @@ def make_transfermarkt_DataFrames():
         # appned dfs to dict using file names as keys
         for i in range(file_count):
            # dataframes[files[i]] = pd.read_csv(os.path.join("../raw_data/data-transfermarkt/", files[i]))
-            dataframes[files[i].replace('.csv', '')] = pd.read_csv(os.path.join(os.getcwd(), "raw_data", "data-transfermarkt", files[i]))
+            dataframes[files[i].replace('.csv', '')] = pd.read_csv(os.path.join(HOME, "code", "DerKevster", "football_predictions", "raw_data", "data-transfermarkt", files[i]))
     return dataframes
 
 def make_BuLi_18_19_df_to_merge():
