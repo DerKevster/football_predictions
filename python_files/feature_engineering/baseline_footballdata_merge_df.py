@@ -124,3 +124,32 @@ def transfermarkt_2018_2019():
     }
     bundesliga_renamed = bundesliga_final.replace(to_replace=renamed_columns)
     return bundesliga_renamed
+
+
+def get_squad_value():
+
+    # Extract Features from Transfermarkt
+
+    transfermarkt_df = make_transfermarkt_DataFrames()
+
+    # Get both DataFrames
+
+    player_valuation = transfermarkt_df["player_valuation"]
+    games = transfermarkt_df["games"]
+
+    # Merge the tables
+
+    games_date = games[["date", "season", "home_club_id", "competition_id"]]
+    player_full = games_date.merge(player_valuation, on="date")
+
+    # Get the max market value per player
+
+    player_full_max = player_full.groupby(["season", "current_club_id", "player_id"])["market_value_in_eur"].max().reset_index()
+
+    # Get the sum of the players
+
+    max_squad_value = player_full_max.groupby(["current_club_id", "season"]).sum().reset_index()
+
+    # Return the squad value per season
+
+    return max_squad_value
