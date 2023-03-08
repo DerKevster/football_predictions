@@ -93,3 +93,51 @@ def get_opp_avg(team, round, df):
 
     oppos_goaldiff = [get_goal_diff(oppo, round, df) for oppo in oppos]
     return oppos_goaldiff.mean()
+
+def get_squad_value(club_name):
+
+    # Extract Features from Transfermarkt
+
+    transfermarkt_df = make_transfermarkt_DataFrames()
+
+    # Get both DataFrames
+
+    player_valuation = transfermarkt_df["player_valuations"]
+    games = transfermarkt_df["games"]
+    clubs = transfermarkt_df["clubs"]
+
+    # Merge the tables
+
+    games_date = games[["date", "season", "home_club_id", "competition_id"]]
+    clubs_clean = clubs[["club_id", "name", "domestic_competition_id"]]
+    player_full = games_date.merge(player_valuation, on="date")
+
+    # Get the max market value per player
+
+    player_full_max = player_full.groupby(["season", "current_club_id", "player_id"])["market_value_in_eur"].max().reset_index()
+
+    # Get the sum of the players
+
+    max_squad_value = player_full_max.groupby(["current_club_id", "season"]).sum().reset_index()
+    squad_val = max_squad_value[["current_club_id", "season", "market_value_in_eur"]]
+
+    # Merge tables to get the club names relativley to their club id
+    squad_value = squad_val.merge(clubs_clean, left_on="current_club_id", right_on="club_id")
+
+    # Cleaning up the Data Table
+    squad_value = squad_value.drop(columns="current_club_id")
+    squad_value_final = squad_value[["name", "season", "market_value_in_eur", "club_id"]]
+    squad_value_final["season"] = squad_value_final["season"].astype("int")
+
+    # Getting the right season and the right team
+    season_mask = squad_value_final["season"] == 2018
+    club_mask = squad_value_final["name"] == club_name
+    competition_mask = squad_value_final["domestic_competition_id"] == "L1"
+
+    squad_value_season = squad_value_final[season_mask]
+    now_really_the_final = squad_value_season[club_mask]
+    bundesliga_value = now_really_the_final[competition_mask]
+
+    # Return the squad value per season.
+
+    return bundesliga_value["market_value_in_eur"]
