@@ -150,6 +150,6 @@ def get_squad_value():
 
     max_squad_value = player_full_max.groupby(["current_club_id", "season"]).sum().reset_index()
 
-    # Return the squad value per season
+    # Return the squad value per season.
 
     return max_squad_value

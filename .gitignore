@@ -1,2 +1,6 @@
 raw_data/
 notebook/
+*.ipynb
+python_files/__pycache__/*
+python_files/feature_engineering/__pycache__/*
+.DS_Store
