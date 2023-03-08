@@ -148,7 +148,7 @@ def baseline_df(Home, Away, Date):
     base_df = make_merged_df()
 
 
-def get_squad_value(season, club_name):
+def get_squad_value(club_name):
 
     # Extract Features from Transfermarkt
 
@@ -163,7 +163,7 @@ def get_squad_value(season, club_name):
     # Merge the tables
 
     games_date = games[["date", "season", "home_club_id", "competition_id"]]
-    clubs_clean = clubs[["club_id", "name"]]
+    clubs_clean = clubs[["club_id", "name", "domestic_competition_id"]]
     player_full = games_date.merge(player_valuation, on="date")
 
     # Get the max market value per player
@@ -184,12 +184,14 @@ def get_squad_value(season, club_name):
     squad_value_final["season"] = squad_value_final["season"].astype("int")
 
     # Getting the right season and the right team
-    season_mask = squad_value_final["season"] == season
+    season_mask = squad_value_final["season"] == 2018
     club_mask = squad_value_final["name"] == club_name
+    competition_mask = squad_value_final["domestic_competition_id"] == "L1"
 
     squad_value_season = squad_value_final[season_mask]
     now_really_the_final = squad_value_season[club_mask]
+    bundesliga_value = now_really_the_final[competition_mask]
 
     # Return the squad value per season.
 
-    return now_really_the_final["market_value_in_eur"]
+    return bundesliga_value["market_value_in_eur"]
