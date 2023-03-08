@@ -90,7 +90,7 @@ def get_goal_diff(team, matchday, df):
         #print(current_game)
     return goal_diff
 
-def get_opp_avg(team, matchday, past_rounds, df):
+def get_opp_avg(team, matchday, df, past_rounds):
     past_rounds_df = make_past_rounds_df(matchday, df, past_rounds)
 
     oppos = []
@@ -102,7 +102,7 @@ def get_opp_avg(team, matchday, past_rounds, df):
             oppos.append(current_game['HomeTeam'])
 
     oppos_goaldiff = [get_goal_diff(oppo, matchday, df) for oppo in oppos]
-    return oppos_goaldiff.mean()
+    return np.average(oppos_goaldiff)
 
 def get_squad_value(club_name):
 
@@ -160,7 +160,7 @@ def make_current_round_df(matchday, df):
 def get_win_home(home, away, matchday, df):
     current_round_df = make_current_round_df(matchday, df)
 
-    for i in range(len(past_rounds_df)):
+    for i in range(len(current_round_df)):
         current_game = current_round_df.iloc[i, :]
         if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['outcome'] == 'H':
             return 1
@@ -170,7 +170,7 @@ def get_win_home(home, away, matchday, df):
 def get_win_away(home, away, matchday, df):
     current_round_df = make_current_round_df(matchday, df)
 
-    for i in range(len(past_rounds_df)):
+    for i in range(len(current_round_df)):
         current_game = current_round_df.iloc[i, :]
         if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['outcome'] == 'A':
             return 1
@@ -180,7 +180,7 @@ def get_win_away(home, away, matchday, df):
 def get_draw(home, away, matchday, df):
     current_round_df = make_current_round_df(matchday, df)
 
-    for i in range(len(past_rounds_df)):
+    for i in range(len(current_round_df)):
         current_game = current_round_df.iloc[i, :]
         if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['outcome'] == 'D':
             return 1
