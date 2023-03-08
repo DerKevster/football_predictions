@@ -1,7 +1,5 @@
 xgboost
 numpy
 pandas
-os
-datetime
 sklearn
 seaborn
