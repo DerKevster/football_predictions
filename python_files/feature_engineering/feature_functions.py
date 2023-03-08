@@ -153,12 +153,36 @@ def get_squad_value(club_name):
     return bundesliga_value["market_value_in_eur"]
 
 
-def get_match_outcome(df):
-    for index, row in df.iterrows():
-        if df.at[index, "home_club_goals"] > df.at[index, "away_club_goals"]:
-            df.at[index, "outcome"] = "H"
-        elif df.at[index, "home_club_goals"] < df.at[index, "away_club_goals"]:
-            df.at[index, "outcome"] = "A"
+def make_current_round_df(matchday, df):
+    current_round = df.loc[df['round'] == matchday]
+    return current_round
+
+def get_win_home(home, away, matchday, df):
+    current_round_df = make_current_round_df(matchday, df)
+
+    for i in range(len(past_rounds_df)):
+        current_game = current_round_df.iloc[i, :]
+        if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['outcome'] = 'H'
+            return 1
         else:
-            df.at[index, "outcome"] = "D"
-    return df
+            return 0
+
+def get_win_away(home, away, matchday, df):
+    current_round_df = make_current_round_df(matchday, df)
+
+    for i in range(len(past_rounds_df)):
+        current_game = current_round_df.iloc[i, :]
+        if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['outcome'] = 'A'
+            return 1
+        else:
+            return 0
+
+def get_draw(home, away, matchday, df):
+    current_round_df = make_current_round_df(matchday, df)
+
+    for i in range(len(past_rounds_df)):
+        current_game = current_round_df.iloc[i, :]
+        if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['outcome'] = 'D'
+            return 1
+        else:
+            return 0
