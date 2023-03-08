@@ -1,27 +1,30 @@
 import pandas as pd
+from python_files.feature_engineering.baseline_footballdata_merge_df import make_merged_df, make_transfermarkt_DataFrames
+from python_files.feature_engineering import feature_functions as ff
 
-def make_dataframe_row(home, away, round, df):
+
+def make_dataframe_row(home, away, matchday, df):
     dicto = {}
     dicto = {'home':home}
     dicto = {'away':away}
-    dicto = {'date':get_date(home, round, df)}
-    dicto = {'shots_h':get_shots(home, round, df, 5)}
-    dicto = {'targets_h':get_targets(home, round, df, 5)}
-    dicto = {'goals_h':get_goals(home, round, df, 5)}
-    dicto = {'conc_h':get_conc(home, round, df, 5)}
-    dicto = {'corner_h':get_corners(home, round, df, 5)}
-    dicto = {'goaldiff_h':get_goal_diff(home, df)}
-    dicto = {'opp_avg_h':get_opp_avg(home, round, df, 5)}
-    dicto = {'value_h':get_squad_value(home)}
-    dicto = {'targets_a':get_targets(away, round, df, 5)}
-    dicto = {'shots_a':get_shots(away, round, df, 5)}
-    dicto = {'goals_a':get_goals(away, round, df, 5)}
-    dicto = {'conc_a':get_conc(away, round, df, 5)}
-    dicto = {'corner_a':get_corners(away, round, df, 5)}
-    dicto = {'goaldiff_a':get_goal_diff(away, df)}
-    dicto = {'opp_avg_a':get_opp_avg(away, round, df, 5)}
-    dicto = {'value_a':get_squad_value(away)}
-    dicto = {'win_home':get_win(home, away)}
-    dicto = {'draw':get_draw(home, away)}
-    dicto = {'win_away':get_win(away, home)}
-    return pd.DataFrame(dicto)
+    dicto = {'date': matchday}
+    dicto = {'shots_h':ff.get_shots(home, matchday, df, 5)}
+    dicto = {'targets_h':ff.get_targets(home, matchday, df, 5)}
+    dicto = {'goals_h':ff.get_goals(home, matchday, df, 5)}
+    dicto = {'conc_h':ff.get_conc(home, matchday, df, 5)}
+    dicto = {'corner_h':ff.get_corner(home, matchday, df, 5)}
+    dicto = {'goaldiff_h':ff.get_goal_diff(home, df)}
+    dicto = {'opp_avg_h':ff.get_opp_avg(home, matchday, df, 5)}
+    dicto = {'value_h':ff.get_squad_value(home)}
+    dicto = {'targets_a':ff.get_targets(away, matchday, df, 5)}
+    dicto = {'shots_a':ff.get_shots(away, matchday, df, 5)}
+    dicto = {'goals_a':ff.get_goals(away, matchday, df, 5)}
+    dicto = {'conc_a':ff.get_conc(away, matchday, df, 5)}
+    dicto = {'corner_a':ff.get_corner(away, matchday, df, 5)}
+    dicto = {'goaldiff_a':ff.get_goal_diff(away, df)}
+    dicto = {'opp_avg_a':ff.get_opp_avg(away, matchday, df, 5)}
+    dicto = {'value_a':ff.get_squad_value(away)}
+    dicto = {'win_home':ff.get_win_home(home, away, matchday, df)}
+    dicto = {'draw':ff.get_draw(home, away, matchday, df)}
+    dicto = {'win_away':ff.get_win_away(home, away, matchday, df)}
+    return pd.DataFrame.from_dict(dicto)
