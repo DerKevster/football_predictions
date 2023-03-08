@@ -162,7 +162,7 @@ def get_win_home(home, away, matchday, df):
 
     for i in range(len(past_rounds_df)):
         current_game = current_round_df.iloc[i, :]
-        if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['outcome'] = 'H'
+        if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['outcome'] == 'H':
             return 1
         else:
             return 0
@@ -172,7 +172,7 @@ def get_win_away(home, away, matchday, df):
 
     for i in range(len(past_rounds_df)):
         current_game = current_round_df.iloc[i, :]
-        if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['outcome'] = 'A'
+        if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['outcome'] == 'A':
             return 1
         else:
             return 0
@@ -182,7 +182,7 @@ def get_draw(home, away, matchday, df):
 
     for i in range(len(past_rounds_df)):
         current_game = current_round_df.iloc[i, :]
-        if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['outcome'] = 'D'
+        if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['outcome'] == 'D':
             return 1
         else:
             return 0
