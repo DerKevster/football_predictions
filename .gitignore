@@ -2,3 +2,5 @@ raw_data/
 notebooks/
 *.ipynb
 notebook/
+football_predictions/OLD baseline_footballdata_merge_df.py
+__pycache__/
