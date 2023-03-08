@@ -1,7 +1,7 @@
 Key;Description;Timeframe;Team;Type;Format
 home;Home Team Name;;;str;
 away;Away Team Name;;;str;
-date;Date of the game in;;;str;%Y-%m-%d
+matchday;matchday of the game;;;str;%Y-%m-%d
 shots_h;Shots;Last 5 Games;Home Team;int;
 targets_h;Shots on Target;Last 5 Games;Home Team;int;
 goals_h;Goals Scored;Last 5 Games;Home Team;int;
