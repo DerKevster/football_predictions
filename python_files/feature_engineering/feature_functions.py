@@ -1,4 +1,6 @@
-from python_files.feature_engineering.baseline_footballdata_merge_df import make_merged_df
+from python_files.feature_engineering.baseline_footballdata_merge_df import make_merged_df, make_transfermarkt_DataFrames
+import pandas as pd
+import numpy as np
 
 df = make_merged_df()
 
