@@ -18,7 +18,7 @@ def make_footballdatauk_DataFrames():
         file_count = len(files)
         # appned dfs to dict using file names as keys
         for i in range(file_count):
-            dataframes[files[i]] = pd.read_csv(os.path.join(HOME, "code", "DerKevster", "football_predictions", "raw_data", "football-data_co_uk", files[i]))
+            dataframes[files[i]] = pd.read_csv(os.path.join(os.getcwd(), "raw_data", "football-data_co_uk", files[i]))
     return dataframes
 
 def make_transfermarkt_DataFrames():
@@ -30,7 +30,7 @@ def make_transfermarkt_DataFrames():
         # appned dfs to dict using file names as keys
         for i in range(file_count):
            # dataframes[files[i]] = pd.read_csv(os.path.join("../raw_data/data-transfermarkt/", files[i]))
-            dataframes[files[i].replace('.csv', '')] = pd.read_csv(os.path.join(HOME, "code", "DerKevster", "football_predictions", "raw_data", "data-transfermarkt", files[i]))
+            dataframes[files[i].replace('.csv', '')] = pd.read_csv(os.path.join(os.getcwd(), "raw_data", "data-transfermarkt", files[i]))
     return dataframes
 
 def make_BuLi_18_19_df_to_merge():
@@ -107,4 +107,11 @@ def make_merged_df():
     merged_df.drop(columns=["game_id", "competition_id", "season", "home_club_id", "away_club_id"], inplace=True)
     merged_df[['round', 'HomeTeam', 'away_team', 'home_club_goals', 'away_club_goals', 'HC', 'AC', 'HS', 'HST', 'AS', 'AST']]
     merged_df['round'] = merged_df['round'].map(lambda matchday: matchday.strip(". Matchday")).map(lambda number: int(number))
+    for index, row in merged_df.iterrows():
+        if merged_df.at[index, "home_club_goals"] > merged_df.at[index, "away_club_goals"]:
+         merged_df.at[index, "outcome"] = "H"
+        elif merged_df.at[index, "home_club_goals"] < merged_df.at[index, "away_club_goals"]:
+         merged_df.at[index, "outcome"] = "A"
+        else:
+         merged_df.at[index, "outcome"] = "D"
     return merged_df
