@@ -2,14 +2,22 @@ from python_files.feature_engineering.baseline_footballdata_merge_df import make
 
 df = make_merged_df()
 
-def make_past_rounds_df(round, df, past_rounds):
-    prev_round_df = df.loc[df['round'] == round-1]
-    for i in range(past_rounds):
-        other_past_rounds_df = df.loc[df['round'] == round-1-i]
-        if i == 0:
-            past_rounds_df = pd.concat([prev_round_df, other_past_rounds_df], axis=0)
+def make_past_rounds_df(round_, df, past_rounds):
+    prev_round_df = df.loc[df['round'] == round_-1]
+    past_rounds_df = pd.DataFrame()
+
+    if round_ - past_rounds > 0:
+        if past_rounds == 1:
+            return prev_round_df
         else:
-            past_rounds_df = pd.concat([past_rounds_df, other_past_rounds_df], axis=0)
+            for i in range(past_rounds):
+                next_past_rounds_df = df.loc[df['round'] == round_-1-i]
+                if i == 0:
+                    past_rounds_df = prev_round_df
+                else:
+                    past_rounds_df = pd.concat([past_rounds_df, next_past_rounds_df], axis=0)
+    else:
+        print("Error: The past rounds you are asking for do not exist")
     return past_rounds_df
 
 def get_goals(team, round, df, past_rounds):
