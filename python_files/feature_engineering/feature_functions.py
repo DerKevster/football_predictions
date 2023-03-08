@@ -151,3 +151,14 @@ def get_squad_value(club_name):
     # Return the squad value per season.
 
     return bundesliga_value["market_value_in_eur"]
+
+
+def get_match_outcome(df):
+    for index, row in df.iterrows():
+        if df.at[index, "home_club_goals"] > df.at[index, "away_club_goals"]:
+            df.at[index, "outcome"] = "H"
+        elif df.at[index, "home_club_goals"] < df.at[index, "away_club_goals"]:
+            df.at[index, "outcome"] = "A"
+        else:
+            df.at[index, "outcome"] = "D"
+    return df
