@@ -26,3 +26,13 @@ def make_dataframe_row(home, away, matchday, df, past_matchdays = 5):
              'draw':ff.get_draw(home, away, matchday, df),
              'win_away':ff.get_win_away(home, away, matchday, df)}
     return pd.DataFrame(dicto, index=[0])
+
+
+
+def make_feature_df(df, past_matchdays):
+    index_match = df.index[df['matchday']==(past_matchdays+1)].tolist()[0]
+    feature_df = pd.DataFrame()
+    for index, matchday in df.loc[index_match : , : ].iterrows():
+        new_df = make_dataframe_row(df.at[index, "HomeTeam"], df.at[index, "away_team"], df.at[index,"matchday"], df)
+        feature_df = pd.concat([feature_df, pd.DataFrame(new_df)], axis=0)
+    return feature_df
