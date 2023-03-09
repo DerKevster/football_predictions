@@ -35,4 +35,5 @@ def make_feature_df(df, past_matchdays):
     for index, matchday in df.loc[index_match : , : ].iterrows():
         new_df = make_dataframe_row(df.at[index, "HomeTeam"], df.at[index, "away_team"], df.at[index,"matchday"], df)
         feature_df = pd.concat([feature_df, pd.DataFrame(new_df)], axis=0)
+    feature_df = feature_df.reset_index()
     return feature_df
