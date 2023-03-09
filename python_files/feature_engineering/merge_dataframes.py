@@ -83,7 +83,7 @@ def transfermarkt_2018_2019():
         'Fc Bayern Munchen' : "Bayern Munich",
         'Fc Schalke 04': "Schalke 04",
         'Fortuna Dusseldorf': "Fortuna Dusseldorf",
-        'Hannover 96': "Hannover 96",
+        'Hannover 96': "Hannover",
         'Hertha Bsc' : "Hertha",
         'Sc Freiburg' : "Freiburg",
         'Vfb Stuttgart': "Stuttgart",
