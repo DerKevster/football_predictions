@@ -1,4 +1,4 @@
-from python_files.feature_engineering.baseline_footballdata_merge_df import make_merged_df, make_transfermarkt_DataFrames
+from python_files.feature_engineering.merge_data import make_transfermarkt_DataFrames
 import pandas as pd
 import numpy as np
 
@@ -97,8 +97,8 @@ def get_goal_diff(team, matchday, df):
 
 # Function to get the average seasonal goal difference of the last [past_rounds] opponents
 def get_opp_avg(team, matchday, df, past_rounds):
-    
-    # make dataframe of last [past_rounds] 
+
+    # make dataframe of last [past_rounds]
     past_rounds_df = make_past_rounds_df(matchday, df, past_rounds)
 
     # make list of last n opponents
@@ -112,7 +112,7 @@ def get_opp_avg(team, matchday, df, past_rounds):
 
     # get goal differences for all opponents
     oppos_goaldiff = [get_goal_diff(oppo, matchday, df) for oppo in oppos]
-    
+
     # return the average value of the opponents goal difference
     return np.average(oppos_goaldiff)
 
@@ -134,19 +134,19 @@ def get_squad_value(club_name):
 
     # Get the max market value per player
     player_full_max = player_full.groupby(["season", "current_club_id", "player_id"])["market_value_in_eur"].max().reset_index()
-    
+
     # Get the sum of the players
     max_squad_value = player_full_max.groupby(["current_club_id", "season"]).sum().reset_index()
     squad_val = max_squad_value[["current_club_id", "season", "market_value_in_eur"]]
-    
+
     # Merge tables to get the club names relativley to their club id
     squad_value = squad_val.merge(clubs_clean, left_on="current_club_id", right_on="club_id")
-    
+
     # Cleaning up the Data Table
     squad_value = squad_value.drop(columns="current_club_id")
     squad_value_final = squad_value[["name", "season", "market_value_in_eur", "club_id", "domestic_competition_id"]]
     squad_value_final["season"] = squad_value_final["season"].astype("int")
-    
+
     # Change the squad names from transfermarkt names to football-db names
     renamed_columns = {
         '1 Fc Nurnberg' : "Nurnberg",
@@ -169,7 +169,7 @@ def get_squad_value(club_name):
         '1 Fsv Mainz 05': "Mainz"
     }
     squad_value_final = squad_value_final.replace(to_replace=renamed_columns)
-    
+
     # Getting the right season and the right team
     season_mask = squad_value_final["season"] == 2018
     club_mask = squad_value_final["name"] == club_name
@@ -177,7 +177,7 @@ def get_squad_value(club_name):
     squad_value_season = squad_value_final[season_mask]
     now_really_the_final = squad_value_season[club_mask]
     bundesliga_value = now_really_the_final[competition_mask]
-    
+
     # Return the squad value per season.
     bundesliga_value
     return bundesliga_value
@@ -210,7 +210,7 @@ def get_win_away(home, away, matchday, df):
         else:
             pass
     return outcome
-        
+
 # function to find if the result of of a specific game is a draw, returns 1 if true and 0 if false
 def get_draw(home, away, matchday, df):
     current_round_df = make_current_round_df(matchday, df)
