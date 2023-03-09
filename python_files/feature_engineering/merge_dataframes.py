@@ -97,6 +97,58 @@ def transfermarkt_2018_2019():
     bundesliga_renamed = bundesliga_final.replace(to_replace=renamed_columns)
     return bundesliga_renamed.sort_values(by='Date')
 
+def squad_value_df():
+    transfermarkt_df = make_transfermarkt_DataFrames()
+
+    # Get both DataFrames
+    player_valuation = transfermarkt_df["player_valuations"]
+    games = transfermarkt_df["games"]
+    clubs = transfermarkt_df["clubs"]
+
+    # Merge the tables
+    games_date = games[["date", "season", "home_club_id", "competition_id"]]
+    clubs_clean = clubs[["club_id", "name", "domestic_competition_id"]]
+    player_full = games_date.merge(player_valuation, on="date")
+
+    # Get the max market value per player
+    player_full_max = player_full.groupby(["season", "current_club_id", "player_id"])["market_value_in_eur"].max().reset_index()
+
+    # Get the sum of the players
+    max_squad_value = player_full_max.groupby(["current_club_id", "season"]).sum().reset_index()
+    squad_val = max_squad_value[["current_club_id", "season", "market_value_in_eur"]]
+
+    # Merge tables to get the club names relativley to their club id
+    squad_value = squad_val.merge(clubs_clean, left_on="current_club_id", right_on="club_id")
+
+    # Cleaning up the Data Table
+    squad_value = squad_value.drop(columns="current_club_id")
+    squad_value_final = squad_value[["name", "season", "market_value_in_eur", "club_id", "domestic_competition_id"]]
+    squad_value_final["season"] = squad_value_final["season"].astype("int")
+
+    # Change the squad names from transfermarkt names to football-db names
+    renamed_columns = {
+        '1 Fc Nurnberg' : "Nurnberg",
+        'Bayer 04 Leverkusen': "Leverkusen",
+        'Borussia Dortmund': "Dortmund",
+        'Borussia Monchengladbach': "M'gladbach",
+        'Eintracht Frankfurt': "Ein Frankfurt",
+        'Fc Bayern Munchen' : "Bayern Munich",
+        'Fc Schalke 04': "Schalke 04",
+        'Fortuna Dusseldorf': "Fortuna Dusseldorf",
+        'Hannover 96': "Hannover",
+        'Hertha Bsc' : "Hertha",
+        'Sc Freiburg' : "Freiburg",
+        'Vfb Stuttgart': "Stuttgart",
+        'Vfl Wolfsburg' : "Wolfsburg",
+        'Sv Werder Bremen': "Werder Bremen",
+        'Fc Augsburg': "Augsburg",
+        'Tsg 1899 Hoffenheim': "Hoffenheim",
+        'Rasenballsport Leipzig': "RB Leipzig",
+        '1 Fsv Mainz 05': "Mainz"
+    }
+    squad_value_final = squad_value_final.replace(to_replace=renamed_columns)
+    return squad_value_final
+
 # the next function merges the transfermarkt and footballdata data into one dataframe so we cna extract the cumulative sums of the previous five days
 
 def make_merged_df():
