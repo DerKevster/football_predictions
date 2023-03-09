@@ -5,7 +5,7 @@ def make_dataframe_row(home, away, matchday, df, past_matchdays = 5):
     dicto = {}
     dicto = {'home':home,
              'away':away,
-             'date': matchday,
+             'matchday': matchday,
              'shots_h':ff.get_shots(home, matchday, df, past_matchdays),
              'targets_h':ff.get_targets(home, matchday, df, past_matchdays),
              'goals_h':ff.get_goals(home, matchday, df, past_matchdays),
