@@ -53,7 +53,7 @@ def transfermarkt_2018_2019():
     games = transfermarkt_df["games"]
     clubs = transfermarkt_df["clubs"]
     clubs_clean = clubs[["club_id", "name"]]
-    games_clean = games[["game_id", "matchday", "competition_id", "season", "date", "home_club_id", "away_club_id", "home_club_goals", "away_club_goals"]]
+    games_clean = games[["game_id", "round", "competition_id", "season", "date", "home_club_id", "away_club_id", "home_club_goals", "away_club_goals"]]
     games_clean.loc[:, "date"] = pd.to_datetime(games_clean.loc[:, "date"])
 
     # Select the Bundesliga (L1)
@@ -105,8 +105,8 @@ def make_merged_df():
 
     merged_df = tmarkt_df.merge(buli_df, on=["Date", "HomeTeam"])
     merged_df.drop(columns=["game_id", "competition_id", "season", "home_club_id", "away_club_id"], inplace=True)
-    merged_df[['matchday', 'HomeTeam', 'away_team', 'home_club_goals', 'away_club_goals', 'HC', 'AC', 'HS', 'HST', 'AS', 'AST']]
-    merged_df['matchday'] = merged_df['matchday'].map(lambda matchday: matchday.strip(". Matchday")).map(lambda number: int(number))
+    merged_df[['round', 'HomeTeam', 'away_team', 'home_club_goals', 'away_club_goals', 'HC', 'AC', 'HS', 'HST', 'AS', 'AST']]
+    merged_df['round'] = merged_df['round'].map(lambda round: round.strip(". Matchday")).map(lambda number: int(number))
     for index, row in merged_df.iterrows():
         if merged_df.at[index, "home_club_goals"] > merged_df.at[index, "away_club_goals"]:
          merged_df.at[index, "outcome"] = "H"
@@ -114,4 +114,5 @@ def make_merged_df():
          merged_df.at[index, "outcome"] = "A"
         else:
          merged_df.at[index, "outcome"] = "D"
+    merged_df=merged_df.rename(columns={'round':'matchday'})
     return merged_df
