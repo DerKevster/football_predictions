@@ -141,37 +141,16 @@ def make_current_matchday_df(matchday, df):
     return current_matchday
 
 # function to find if the result of of a specific game is a home win, returns 1 if true and 0 if false
-def get_win_home(home, away, matchday, df):
+def get_outcome(home, away, matchday, df):
+    # 0 = Home Team wins, 1 = Draw, 2 = Away Team wins
     current_matchday_df = make_current_matchday_df(matchday, df)
     outcome = 0
     for i in range(len(current_matchday_df)):
         current_game = current_matchday_df.iloc[i, :]
-        if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['outcome'] == 'H':
-            outcome = 1
+        if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['home_club_goals'] > current_game['away_club_goals']:
+            outcome = 0
+        elif current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['home_club_goals'] < current_game['away_club_goals']:
+            outcome = 2
         else:
-            pass
-    return outcome
-
-# function to find if the result of of a specific game is an away win, returns 1 if true and 0 if false
-def get_win_away(home, away, matchday, df):
-    current_matchday_df = make_current_matchday_df(matchday, df)
-    outcome = 0
-    for i in range(len(current_matchday_df)):
-        current_game = current_matchday_df.iloc[i, :]
-        if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['outcome'] == 'A':
             outcome = 1
-        else:
-            pass
-    return outcome
-
-# function to find if the result of of a specific game is a draw, returns 1 if true and 0 if false
-def get_draw(home, away, matchday, df):
-    current_matchday_df = make_current_matchday_df(matchday, df)
-    outcome = 0
-    for i in range(len(current_matchday_df)):
-        current_game = current_matchday_df.iloc[i, :]
-        if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['outcome'] == 'D':
-            outcome = 1
-        else:
-            pass
     return outcome
