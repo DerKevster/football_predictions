@@ -152,6 +152,7 @@ def squad_value_df():
 # the next function merges the transfermarkt and footballdata data into one dataframe so we cna extract the cumulative sums of the previous five days
 
 def make_merged_df():
+    import warnings; warnings.filterwarnings("ignore")
     buli_df = make_BuLi_18_19_df_to_merge()
     tmarkt_df = transfermarkt_2018_2019()
 
