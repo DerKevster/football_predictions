@@ -116,7 +116,7 @@ def get_opp_avg(team, matchday, df, past_matchdays):
     # return the average value of the opponents goal difference
     return np.average(oppos_goaldiff)
 
-# Function to get the squad value for a Bundesliga team for the season 2018
+# Function to get the squad value for a Bundesliga team for the season 2018 in Millions €
 def get_squad_value(club_name):
 
     # Extract Features from Transfermarkt
@@ -180,7 +180,7 @@ def get_squad_value(club_name):
 
     # Return the squad value per season.
     bundesliga_value
-    return bundesliga_value["market_value_in_eur"].max()
+    return (bundesliga_value["market_value_in_eur"].max()/1000000)
 
 # Make a dataframe of the current match day
 def make_current_matchday_df(matchday, df):

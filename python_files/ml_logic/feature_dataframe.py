@@ -13,7 +13,7 @@ def make_dataframe_row(home, away, matchday, df, past_matchdays = 5):
              'corner_h':ff.get_corner(home, matchday, df, past_matchdays),
              'goaldiff_h':ff.get_goal_diff(home, matchday, df),
              'opp_avg_h':ff.get_opp_avg(home, matchday, df, past_matchdays),
-             'value_h [M]':(ff.get_squad_value(home)/1000000),
+             'value_h':ff.get_squad_value(home),
              'targets_a':ff.get_targets(away, matchday, df, past_matchdays),
              'shots_a':ff.get_shots(away, matchday, df, past_matchdays),
              'goals_a':ff.get_goals(away, matchday, df, past_matchdays),
