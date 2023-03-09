@@ -2,31 +2,31 @@ from python_files.feature_engineering.merge_dataframes import make_transfermarkt
 import pandas as pd
 import numpy as np
 
-# Make a dataframe of the last [past_rounds] match days
-def make_past_rounds_df(matchday, df, past_rounds):
-    prev_round_df = df.loc[df['round'] == matchday-1]
-    past_rounds_df = pd.DataFrame()
+# Make a dataframe of the last [past_matchdays] match days
+def make_past_matchdays_df(matchday, df, past_matchdays):
+    prev_matchday_df = df.loc[df['matchday'] == matchday-1]
+    past_matchdays_df = pd.DataFrame()
 
-    if matchday - past_rounds > 0:
-        if past_rounds == 1:
-            return prev_round_df
+    if matchday - past_matchdays > 0:
+        if past_matchdays == 1:
+            return prev_matchday_df
         else:
-            for i in range(past_rounds):
-                next_past_rounds_df = df.loc[df['round'] == matchday-1-i]
+            for i in range(past_matchdays):
+                next_past_matchdays_df = df.loc[df['matchday'] == matchday-1-i]
                 if i == 0:
-                    past_rounds_df = prev_round_df
+                    past_matchdays_df = prev_matchday_df
                 else:
-                    past_rounds_df = pd.concat([past_rounds_df, next_past_rounds_df], axis=0)
+                    past_matchdays_df = pd.concat([past_matchdays_df, next_past_matchdays_df], axis=0)
     else:
-        print("Error: The past rounds you are asking for do not exist")
-    return past_rounds_df
+        print("Error: The past matchdays you are asking for do not exist")
+    return past_matchdays_df
 
-# Function to get the number of goals scored for a [team] in the last [past_rounds] match days
-def get_goals(team, matchday, df, past_rounds):
-    past_rounds_df = make_past_rounds_df(matchday, df, past_rounds)
+# Function to get the number of goals scored for a [team] in the last [past_matchdays] match days
+def get_goals(team, matchday, df, past_matchdays):
+    past_matchdays_df = make_past_matchdays_df(matchday, df, past_matchdays)
     goals = 0
-    for i in range(len(past_rounds_df)):
-        current_game = past_rounds_df.iloc[i, :]
+    for i in range(len(past_matchdays_df)):
+        current_game = past_matchdays_df.iloc[i, :]
         if current_game['HomeTeam'] == team:
             goals += current_game['home_club_goals']
         elif current_game['away_team'] == team:
@@ -34,48 +34,48 @@ def get_goals(team, matchday, df, past_rounds):
         #print(current_game)
     return goals
 
-# Function to get the number of goals conceded for a [team] in the last [past_rounds] match days
-def get_conc(team, matchday, df, past_rounds):
-    past_rounds_df = make_past_rounds_df(matchday, df, past_rounds)
+# Function to get the number of goals conceded for a [team] in the last [past_matchdays] match days
+def get_conc(team, matchday, df, past_matchdays):
+    past_matchdays_df = make_past_matchdays_df(matchday, df, past_matchdays)
     goals = 0
-    for i in range(len(past_rounds_df)):
-        current_game = past_rounds_df.iloc[i, :]
+    for i in range(len(past_matchdays_df)):
+        current_game = past_matchdays_df.iloc[i, :]
         if current_game['HomeTeam'] == team:
             goals += current_game['away_club_goals']
         elif current_game['away_team'] == team:
             goals += current_game['home_club_goals']
     return goals
 
-# Function to get the number of corner kicks for a [team] in the last [past_rounds] match days
-def get_corner(team, matchday, df, past_rounds):
-    past_rounds_df = make_past_rounds_df(matchday, df, past_rounds)
+# Function to get the number of corner kicks for a [team] in the last [past_matchdays] match days
+def get_corner(team, matchday, df, past_matchdays):
+    past_matchdays_df = make_past_matchdays_df(matchday, df, past_matchdays)
     goals = 0
-    for i in range(len(past_rounds_df)):
-        current_game = past_rounds_df.iloc[i, :]
+    for i in range(len(past_matchdays_df)):
+        current_game = past_matchdays_df.iloc[i, :]
         if current_game['HomeTeam'] == team:
             goals += current_game['HC']
         elif current_game['away_team'] == team:
             goals += current_game['AC']
     return goals
 
-# Function to get the number of shots for a [team] in the last [past_rounds] match days
-def get_shots(team, matchday, df, past_rounds):
-    past_rounds_df = make_past_rounds_df(matchday, df, past_rounds)
+# Function to get the number of shots for a [team] in the last [past_matchdays] match days
+def get_shots(team, matchday, df, past_matchdays):
+    past_matchdays_df = make_past_matchdays_df(matchday, df, past_matchdays)
     goals = 0
-    for i in range(len(past_rounds_df)):
-        current_game = past_rounds_df.iloc[i, :]
+    for i in range(len(past_matchdays_df)):
+        current_game = past_matchdays_df.iloc[i, :]
         if current_game['HomeTeam'] == team:
             goals += current_game['HS']
         elif current_game['away_team'] == team:
             goals += current_game['AS']
     return goals
 
-# Function to get the number of shots on target for a [team] in the last [past_rounds] match days
-def get_targets(team, matchday, df, past_rounds):
-    past_rounds_df = make_past_rounds_df(matchday, df, past_rounds)
+# Function to get the number of shots on target for a [team] in the last [past_matchdays] match days
+def get_targets(team, matchday, df, past_matchdays):
+    past_matchdays_df = make_past_matchdays_df(matchday, df, past_matchdays)
     goals = 0
-    for i in range(len(past_rounds_df)):
-        current_game = past_rounds_df.iloc[i, :]
+    for i in range(len(past_matchdays_df)):
+        current_game = past_matchdays_df.iloc[i, :]
         if current_game['HomeTeam'] == team:
             goals += current_game['HST']
         elif current_game['away_team'] == team:
@@ -84,10 +84,10 @@ def get_targets(team, matchday, df, past_rounds):
 
 # Function to get the goal difference for a [team] for the entire season
 def get_goal_diff(team, matchday, df):
-    past_rounds_df = make_past_rounds_df(matchday, df, (matchday-1))
+    past_matchdays_df = make_past_matchdays_df(matchday, df, (matchday-1))
     goal_diff = 0
-    for i in range(len(past_rounds_df)):
-        current_game = past_rounds_df.iloc[i, :]
+    for i in range(len(past_matchdays_df)):
+        current_game = past_matchdays_df.iloc[i, :]
         if current_game['HomeTeam'] == team:
             goal_diff += (current_game['home_club_goals'] - current_game['away_club_goals'])
         elif current_game['away_team'] == team:
@@ -95,16 +95,16 @@ def get_goal_diff(team, matchday, df):
         #print(current_game)
     return goal_diff
 
-# Function to get the average seasonal goal difference of the last [past_rounds] opponents
-def get_opp_avg(team, matchday, df, past_rounds):
+# Function to get the average seasonal goal difference of the last [past_matchdays] opponents
+def get_opp_avg(team, matchday, df, past_matchdays):
 
-    # make dataframe of last [past_rounds]
-    past_rounds_df = make_past_rounds_df(matchday, df, past_rounds)
+    # make dataframe of last [past_matchdays]
+    past_matchdays_df = make_past_matchdays_df(matchday, df, past_matchdays)
 
     # make list of last n opponents
     oppos = []
-    for i in range(len(past_rounds_df)):
-        current_game = past_rounds_df.iloc[i, :]
+    for i in range(len(past_matchdays_df)):
+        current_game = past_matchdays_df.iloc[i, :]
         if current_game['HomeTeam'] == team:
             oppos.append(current_game['away_team'])
         elif current_game['away_team'] == team:
@@ -116,7 +116,7 @@ def get_opp_avg(team, matchday, df, past_rounds):
     # return the average value of the opponents goal difference
     return np.average(oppos_goaldiff)
 
-# Function to get the squad value for a Bundesliga team for the season 2018
+# Function to get the squad value for a Bundesliga team for the season 2018 in Millions €
 def get_squad_value(club_name):
 
     # Extract Features from Transfermarkt
@@ -132,19 +132,19 @@ def get_squad_value(club_name):
 
     # Return the squad value per season.
     bundesliga_value
-    return bundesliga_value["market_value_in_eur"].max()
+    return (bundesliga_value["market_value_in_eur"].max()/1000000)
 
 # Make a dataframe of the current match day
-def make_current_round_df(matchday, df):
-    current_round = df.loc[df['round'] == matchday]
-    return current_round
+def make_current_matchday_df(matchday, df):
+    current_matchday = df.loc[df['matchday'] == matchday]
+    return current_matchday
 
 # function to find if the result of of a specific game is a home win, returns 1 if true and 0 if false
 def get_win_home(home, away, matchday, df):
-    current_round_df = make_current_round_df(matchday, df)
+    current_matchday_df = make_current_matchday_df(matchday, df)
     outcome = 0
-    for i in range(len(current_round_df)):
-        current_game = current_round_df.iloc[i, :]
+    for i in range(len(current_matchday_df)):
+        current_game = current_matchday_df.iloc[i, :]
         if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['outcome'] == 'H':
             outcome = 1
         else:
@@ -153,10 +153,10 @@ def get_win_home(home, away, matchday, df):
 
 # function to find if the result of of a specific game is an away win, returns 1 if true and 0 if false
 def get_win_away(home, away, matchday, df):
-    current_round_df = make_current_round_df(matchday, df)
+    current_matchday_df = make_current_matchday_df(matchday, df)
     outcome = 0
-    for i in range(len(current_round_df)):
-        current_game = current_round_df.iloc[i, :]
+    for i in range(len(current_matchday_df)):
+        current_game = current_matchday_df.iloc[i, :]
         if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['outcome'] == 'A':
             outcome = 1
         else:
@@ -165,10 +165,10 @@ def get_win_away(home, away, matchday, df):
 
 # function to find if the result of of a specific game is a draw, returns 1 if true and 0 if false
 def get_draw(home, away, matchday, df):
-    current_round_df = make_current_round_df(matchday, df)
+    current_matchday_df = make_current_matchday_df(matchday, df)
     outcome = 0
-    for i in range(len(current_round_df)):
-        current_game = current_round_df.iloc[i, :]
+    for i in range(len(current_matchday_df)):
+        current_game = current_matchday_df.iloc[i, :]
         if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['outcome'] == 'D':
             outcome = 1
         else:
