@@ -118,6 +118,7 @@ def get_opp_avg(team, matchday, df, past_matchdays):
 
 # Function to get the squad value for a Bundesliga team for the season 2018 in Millions €
 def get_squad_value(club_name, df = squad_value_df()):
+    import warnings; warnings.filterwarnings("ignore")
 
     # Extract Features from Transfermarkt
     squad_value_final = df
