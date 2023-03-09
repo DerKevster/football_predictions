@@ -1,4 +1,4 @@
-from python_files.feature_engineering.merge_data import make_transfermarkt_DataFrames
+from python_files.feature_engineering.merge_data import mergedataframes
 import pandas as pd
 import numpy as np
 
@@ -180,7 +180,7 @@ def get_squad_value(club_name):
 
     # Return the squad value per season.
     bundesliga_value
-    return bundesliga_value
+    return bundesliga_value["market_value_in_eur"].max()
 
 # Make a dataframe of the current match day
 def make_current_round_df(matchday, df):
