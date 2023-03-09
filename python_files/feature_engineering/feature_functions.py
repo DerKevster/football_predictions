@@ -151,6 +151,6 @@ def get_outcome(home, away, matchday, df):
             outcome = 0
         elif current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['home_club_goals'] < current_game['away_club_goals']:
             outcome = 2
-        else:
+        elif current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['home_club_goals'] == current_game['away_club_goals']:
             outcome = 1
     return outcome
