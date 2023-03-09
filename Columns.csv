@@ -1,15 +1,17 @@
 Key;Description;Timeframe;Team;Type;Format
 home;Home Team Name;;;str;
 away;Away Team Name;;;str;
-date;Date of the game in;;;str;%Y-%m-%d
-shots_h;Shots on Target;Last 5 Games;Home Team;int;
+matchday;matchday of the game;;;str;%Y-%m-%d
+shots_h;Shots;Last 5 Games;Home Team;int;
+targets_h;Shots on Target;Last 5 Games;Home Team;int;
 goals_h;Goals Scored;Last 5 Games;Home Team;int;
 conc_h;Goals Conceided;Last 5 Games;Home Team;int;
 corner_h;Corners;Last 5 Games;Home Team;int;
 goaldiff_h;Goal Difference;Whole Season;Home Team;int;
 opp_avg_h;Average Goal Difference of last 5 oponents;Whole Season;Home Team;float;
 value_h;Squad Value;Max Value in Season;Home Team;int;
-shots_a;Shots on Target;Last 5 Games;Away Team;int;
+targets_a;Shots on Target;Last 5 Games;Away Team;int;
+shots_a;Shots;Last 5 Games;Away Team;int;
 goals_a;Goals Scored;Last 5 Games;Away Team;int;
 conc_a;Goals Conceided;Last 5 Games;Away Team;int;
 corner_a;Corners;Last 5 Games;Away Team;int;
