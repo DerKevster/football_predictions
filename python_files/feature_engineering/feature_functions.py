@@ -1,4 +1,4 @@
-from python_files.feature_engineering.merge_data import mergedataframes
+from python_files.feature_engineering.merge_dataframes import make_transfermarkt_DataFrames
 import pandas as pd
 import numpy as np
 
