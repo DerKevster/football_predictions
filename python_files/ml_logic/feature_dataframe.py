@@ -21,7 +21,7 @@ def make_dataframe_row(home, away, matchday, df, past_matchdays = 5):
              'corner_a':ff.get_corner(away, matchday, df, past_matchdays),
              'goaldiff_a':ff.get_goal_diff(away, matchday, df),
              'opp_avg_a':ff.get_opp_avg(away, matchday, df, past_matchdays),
-             'value_a [M]':(ff.get_squad_value(away)/1000000),
+             'value_a':ff.get_squad_value(away),
              'win_home':ff.get_win_home(home, away, matchday, df),
              'draw':ff.get_draw(home, away, matchday, df),
              'win_away':ff.get_win_away(home, away, matchday, df)}
