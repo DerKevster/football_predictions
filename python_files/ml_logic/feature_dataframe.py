@@ -22,7 +22,7 @@ def make_dataframe_row(home, away, matchday, df, past_matchdays = 5):
              'goaldiff_a':ff.get_goal_diff(away, matchday, df),
              'opp_avg_a':ff.get_opp_avg(away, matchday, df, past_matchdays),
              'value_a':ff.get_squad_value(away),
-             'win_home':ff.get_outcome(home, away, matchday, df)}
+             'outcome':ff.get_outcome(home, away, matchday, df)}
     return pd.DataFrame(dicto, index=[0])
 
 
