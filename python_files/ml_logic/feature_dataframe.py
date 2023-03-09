@@ -19,7 +19,7 @@ def make_dataframe_row(home, away, matchday, df, past_matchdays = 5):
              'goals_a':ff.get_goals(away, matchday, df, past_matchdays),
              'conc_a':ff.get_conc(away, matchday, df, past_matchdays),
              'corner_a':ff.get_corner(away, matchday, df, past_matchdays),
-             'goaldiff_a':ff.get_goal_diff(home, matchday, df),
+             'goaldiff_a':ff.get_goal_diff(away, matchday, df),
              'opp_avg_a':ff.get_opp_avg(away, matchday, df, past_matchdays),
              'value_a [M]':(ff.get_squad_value(away)/1000000),
              'win_home':ff.get_win_home(home, away, matchday, df),
