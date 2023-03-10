@@ -169,3 +169,137 @@ def make_merged_df():
          merged_df.at[index, "outcome"] = 1
     merged_df=merged_df.rename(columns={'round':'matchday'})
     return merged_df
+
+def tf_to_fb_translator(league):
+  league_translator = {
+    'BL' : BL_translator,
+    'PL' : PL_translator,
+    'SA' : SA_translator,
+    'LL' : LL_translator
+  }
+
+
+  BL_translator = {
+      'Sv Werder Bremen':'Werder Bremen',
+      'Eintracht Frankfurt':'Ein Frankfurt',
+      'Fortuna Dusseldorf':'Fortuna Dusseldorf',
+      'Fc Augsburg':'Augsburg',
+      'Borussia Monchengladbach':"M'gladbach",
+      'Spvgg Greuther Furth':'Greuther Furth',
+      'Borussia Dortmund':'Dortmund',
+      'Tsg 1899 Hoffenheim':'Hoffenheim',
+      'Vfl Bochum':'Bochum',
+      'Fc Bayern Munchen':'Bayern Munich',
+      '1 Fc Koln':'FC Koln',
+      'Sc Freiburg':'Freiburg',
+      'Vfl Wolfsburg':'Wolfsburg',
+      'Hannover 96':'Hannover',
+      'Fc Schalke 04':'Schalke 04',
+      'Rasenballsport Leipzig':'RB Leipzig',
+      'Hertha Bsc':'Hertha',
+      'Arminia Bielefeld':'Bielefeld',
+      '1 Fsv Mainz 05':'Mainz',
+      'Vfb Stuttgart':'Stuttgart',
+      '1 Fc Union Berlin':'Union Berlin',
+      'Sc Paderborn 07':'Paderborn',
+      'Bayer 04 Leverkusen':'Leverkusen',
+      '1 Fc Nurnberg':'Nurnberg'
+    }
+
+
+  PL_translator = {
+      'Aston Villa':'Aston Villa',
+      'Norwich City':'Norwich',
+      'Brighton Amp Hove Albion':'Brighton',
+      'Nottingham Forest':"Nott'm Forest",
+      'Sheffield United':'Sheffield United',
+      'Manchester City':'Man City',
+      'Fc Chelsea':'Chelsea',
+      'Cardiff City':'Cardiff',
+      'Fc Burnley':'Burnley',
+      'Crystal Palace':'Crystal Palace',
+      'Fc Arsenal':'Arsenal',
+      'Fc Liverpool':'Liverpool',
+      'Fc Fulham':'Fulham',
+      'Huddersfield Town':'Huddersfield',
+      'Leicester City':'Leicester',
+      'West Bromwich Albion':'West Brom',
+      'Afc Bournemouth':'Bournemouth',
+      'Fc Everton':'Everton',
+      'West Ham United':'West Ham',
+      'Wolverhampton Wanderers':'Wolves',
+      'Fc Watford':'Watford',
+      'Leeds United':'Leeds',
+      'Manchester United':'Man United',
+      'Newcastle United':'Newcastle',
+      'Tottenham Hotspur':'Tottenham',
+      'Fc Southampton':'Southampton',
+      'Fc Brentford':'Brentford'
+    }
+
+
+  LL_translator = {
+      'Fc Getafe' : 'Getafe' ,
+      'Fc Girona' : 'Girona',
+      'Fc Barcelona' : 'Barcelona',
+      'Atletico Madrid' : 'Ath Madrid',
+      'Fc Villarreal' : 'Villarreal',
+      'Fc Valencia' : 'Valencia',
+      'Real Betis Sevilla' : 'Betis',
+      'Athletic Bilbao' : 'Ath Bilbao',
+      'Sd Huesca' : 'Huesca',
+      'Rayo Vallecano' : 'Vallecano',
+      'Rcd Mallorca' : 'Mallorca',
+      'Deportivo Alaves' : 'Alaves',
+      'Fc Granada' : 'Granada',
+      'Fc Cadiz' : 'Cadiz',
+      'Espanyol Barcelona' : 'Espanol',
+      'Fc Elche' : 'Elche',
+      'Sd Eibar' : 'Eibar',
+      'Real Sociedad San Sebastian' : 'Sociedad',
+      'Fc Sevilla' : 'Sevilla',
+      'Real Valladolid' : 'Valladolid',
+      'Real Madrid' : 'Real Madrid',
+      'Ca Osasuna' : 'Osasuna',
+      'Cd Leganes' : 'Leganes',
+      'Celta Vigo' : 'Celta',
+      'Ud Levante' : 'Levante',
+      'Ud Almeria' : 'Almeria'
+    }
+
+
+  SA_translator = {
+      'Udinese Calcio':'Udinese',
+      'Sampdoria Genua':'Sampdoria',
+      'Lazio Rom':'Lazio',
+      'Atalanta Bergamo':'Atalanta',
+      'Ac Florenz':'Fiorentina',
+      'Benevento Calcio':'Benevento',
+      'Venezia Fc':'Venezia',
+      'Genua Cfc':'Genoa',
+      'Hellas Verona':'Verona',
+      'Ac Monza':'Monza',
+      'Juventus Turin':'Juventus',
+      'Spal':'Spal',
+      'Fc Turin':'Torino',
+      'Parma Calcio 1913':'Parma',
+      'Fc Crotone':'Crotone',
+      'Us Sassuolo':'Sassuolo',
+      'Spezia Calcio':'Spezia',
+      'Us Cremonese':'Cremonese',
+      'Cagliari Calcio':'Cagliari',
+      'Fc Bologna':'Bologna',
+      'Chievo Verona':'Chievo',
+      'Fc Empoli':'Empoli',
+      'Us Lecce':'Lecce',
+      'Ssc Neapel':'Napoli',
+      'Ac Mailand':'Milan',
+      'Brescia Calcio':'Brescia',
+      'Inter Mailand':'Inter',
+      'Frosinone Calcio':'Frosinone',
+      'Us Salernitana 1919':'Salernitana',
+      'As Rom':'Roma'
+    }
+
+  translator = league_translator[league]
+  return translator
