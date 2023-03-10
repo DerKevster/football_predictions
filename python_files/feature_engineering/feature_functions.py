@@ -152,21 +152,17 @@ def get_outcome(home, away, matchday, df):
     return outcome
 
  # Function to compute the average over each teams defense
-def get_defense(team, df):
-    clean_df = clean_FIFA_df(df)
-    return clean_df[clean_df.Club == team][clean_df.Field == 'Defense']['Overall'].mean()
+def get_defense(team, clean_df):
+    return round(clean_df[clean_df.Club == team][clean_df.Field == 'Defense']['Overall'].mean(),1)
 
 # Function to compute the average over each teams midfield
-def get_midfield(team, df):
-    clean_df = clean_FIFA_df(df)
-    return clean_df[clean_df.Club == team][clean_df.Field == 'Midfield']['Overall'].mean()
+def get_midfield(team, clean_df):
+    return round(clean_df[clean_df.Club == team][clean_df.Field == 'Midfield']['Overall'].mean(),1)
 
 # Function to compute the average over each teams attack
-def get_attack(team, df):
-    clean_df = clean_FIFA_df(df)
-    return clean_df[clean_df.Club == team][clean_df.Field == 'Attack']['Overall'].mean()
+def get_attack(team, clean_df):
+    return round(clean_df[clean_df.Club == team][clean_df.Field == 'Attack']['Overall'].mean(),1)
 
 # Function to compute the average over each teams bench
-def get_bench(team, df):
-    clean_df = clean_FIFA_df(df)
-    return clean_df[clean_df.Club == team][clean_df.Field == 'Bench']['Overall'].mean()
+def get_bench(team, clean_df):
+    return round(clean_df[clean_df.Club == team][clean_df.Field == 'Bench']['Overall'].mean(),1)
