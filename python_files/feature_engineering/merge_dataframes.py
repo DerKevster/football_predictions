@@ -162,9 +162,9 @@ def make_merged_df():
     merged_df['round'] = merged_df['round'].map(lambda round: round.strip(". Matchday")).map(lambda number: int(number))
     for index, row in merged_df.iterrows():
         if merged_df.at[index, "home_club_goals"] > merged_df.at[index, "away_club_goals"]:
-         merged_df.at[index, "outcome"] = 2
-        elif merged_df.at[index, "home_club_goals"] < merged_df.at[index, "away_club_goals"]:
          merged_df.at[index, "outcome"] = 0
+        elif merged_df.at[index, "home_club_goals"] < merged_df.at[index, "away_club_goals"]:
+         merged_df.at[index, "outcome"] = 2
         else:
          merged_df.at[index, "outcome"] = 1
     merged_df=merged_df.rename(columns={'round':'matchday'})
