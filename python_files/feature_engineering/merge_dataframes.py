@@ -206,7 +206,6 @@ def make_merged_df(league, season):
   import warnings; warnings.filterwarnings("ignore")
   football_df = make_footballdata_df_to_merge(league, season)
   tmarkt_df = make_tranfermarkt_df_to_merge(league, season)
-  fifa_df = make_fifa_df_to_merge()
 
   # Get teams
   translator = tf_to_fb_translator(league)
