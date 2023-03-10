@@ -1,4 +1,4 @@
-from python_files.feature_engineering.merge_dataframes import make_transfermarkt_DataFrames, squad_value_df, clean_FIFA_df
+from python_files.feature_engineering.merge_dataframes import make_transfermarkt_DataFrames, make_squad_value_df, clean_FIFA_df
 import pandas as pd
 import numpy as np
 
