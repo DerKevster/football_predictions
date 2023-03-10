@@ -1,8 +1,8 @@
 import pandas as pd
 from python_files.feature_engineering import feature_functions as ff
-from python_files.feature_engineering.merge_dataframes import make_merged_df, make_fifa_df
+from python_files.feature_engineering.merge_dataframes import make_merged_df, make_fifa_df, make_squad_value_df
 
-def make_dataframe_row(home, away, matchday, merged_df, fifa_df, past_matchdays = 5):
+def make_dataframe_row(home, away, matchday, merged_df, fifa_df, squad_value_df, past_matchdays = 5):
 
     dicto = {}
     dicto = {'home':home,
@@ -15,7 +15,7 @@ def make_dataframe_row(home, away, matchday, merged_df, fifa_df, past_matchdays 
              'corner_h' : ff.get_corner(home, matchday, merged_df, past_matchdays),
              'goaldiff_h' : ff.get_goal_diff(home, matchday, merged_df),
              'opp_avg_h' : ff.get_opp_avg(home, matchday, merged_df, past_matchdays),
-             'value_h' : ff.get_squad_value(home, fifa_df),
+             'value_h' : ff.get_squad_value(home, squad_value_df),
              'attack_h' : ff.get_attack(home, fifa_df),
              'midfield_h' : ff.get_midfield(home, fifa_df),
              'defense_h' : ff.get_defense(home, fifa_df),
@@ -27,7 +27,7 @@ def make_dataframe_row(home, away, matchday, merged_df, fifa_df, past_matchdays 
              'corner_a' : ff.get_corner(away, matchday, merged_df, past_matchdays),
              'goaldiff_a' : ff.get_goal_diff(away, matchday, merged_df),
              'opp_avg_a' : ff.get_opp_avg(away, matchday, merged_df, past_matchdays),
-             'value_a' : ff.get_squad_value(away),
+             'value_a' : ff.get_squad_value(away, squad_value_df),
              'attack_a' : ff.get_attack(away, fifa_df),
              'midfield_a' : ff.get_midfield(away, fifa_df),
              'defense_a' : ff.get_defense(away, fifa_df),
@@ -42,6 +42,7 @@ def make_feature_df(league, season, past_matchdays):
 
     merged_df = make_merged_df(league, season)
     fifa_df = make_fifa_df(season)
+    squad_value_df = make_squad_value_df(season)
 
     index_match = merged_df.index[merged_df['matchday']==(past_matchdays+1)].tolist()[0]
     feature_df = pd.DataFrame()
