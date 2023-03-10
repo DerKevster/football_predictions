@@ -214,3 +214,9 @@ def make_merged_df(league, season):
        merged_df.at[index, "outcome"] = 1
   merged_df=merged_df.rename(columns={'round':'matchday'})
   return merged_df
+
+#Choose a specific FIFA dataframe by giving a season
+def make_fifa_df(season):
+    sea = season[0:2]
+    df = make_fifa_DataFrames()[f'FIFA{sea}_official_data.csv']
+    return df
