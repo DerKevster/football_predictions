@@ -33,20 +33,43 @@ def make_transfermarkt_DataFrames():
             dataframes[files[i].replace('.csv', '')] = pd.read_csv(os.path.join(HOME, "code", "DerKevster", "football_predictions", "raw_data", "data-transfermarkt", files[i]))
     return dataframes
 
-def make_BuLi_18_19_df_to_merge():
+def make_footballdata_df_to_merge(league, season):
     # Extract features from BuLi_18-19
     footballdata_dfs = make_footballdatauk_DataFrames()
-    BuLi_18_19_df = footballdata_dfs['BuLi_18-19.csv']
+
+    # Translate league names
+    league_translator = {
+    'BL' : 'BuLi',
+    'PL' : 'Prem',
+    'SA' : 'SerieA',
+    'LL' : 'LaLiga'
+    }
+
+    league_translated = league_translator[league]
+    league_season_df = footballdata_dfs[f'{league_translated}_{season}.csv']
     # Strip whitespace from column names
-    BuLi_18_19_df.columns = BuLi_18_19_df.columns.str.strip()
+    league_season_df.columns = league_season_df.columns.str.strip()
     # Sort by dates as datetime objects
-    BuLi_18_19_df['Date'] = pd.to_datetime(BuLi_18_19_df['Date'], dayfirst=True)
-    BuLi_18_19_df.sort_values(by='Date', ascending=True)
+    league_season_df['Date'] = pd.to_datetime(league_season_df['Date'], dayfirst=True)
+    league_season_df.sort_values(by='Date', ascending=True)
     # Get follwing Columns: 'Date' 'HomeTeam' 'HC' 'AC' 'HS' 'HST' 'AS' 'AST' in a df to merge with transfermarkt data
-    footballdata_df_to_merge = BuLi_18_19_df[['Date', 'HomeTeam', 'HC', 'AC', 'HS', 'HST', 'AS', 'AST']]
+    footballdata_df_to_merge = league_season_df[['Date', 'HomeTeam', 'HC', 'AC', 'HS', 'HST', 'AS', 'AST']]
     return footballdata_df_to_merge
 
-def transfermarkt_2018_2019():
+
+def make_tranfermarkt_df_to_merge(league, season):
+    # League translation
+    league_translator = {
+    "BL":"L1",
+    "PL":"GB1",
+    "LL":"ES1",
+    "SA":"IT1"
+    }
+    league = league_translator[league]
+
+    # Season translator
+    season = int(f"20{season[:2]}")
+
     # Extract Features from Transfermarkt
     transfermarkt_df = make_transfermarkt_DataFrames()
     # Get Games and Clubs
@@ -57,11 +80,11 @@ def transfermarkt_2018_2019():
     games_clean.loc[:, "date"] = pd.to_datetime(games_clean.loc[:, "date"])
 
     # Select the Bundesliga (L1)
-    bundesliga_games = games["competition_id"] == "L1"
+    bundesliga_games = games["competition_id"] == league
     bundesliga_df = games_clean[bundesliga_games]
 
     # Select season 2018/19
-    season_2018 = bundesliga_df["season"] == 2018
+    season_2018 = bundesliga_df["season"] == season
     bundesliga_2018 = bundesliga_df[season_2018]
     bundesliga_2018_sorted = bundesliga_2018.sort_values(by=["home_club_id", "date"])
 
@@ -73,29 +96,7 @@ def transfermarkt_2018_2019():
     bundesliga_final = bund.merge(clubs_clean, left_on="away_club_id", right_on="club_id")
     bundesliga_final = bundesliga_final.rename(columns= {"name_x":"HomeTeam", "name_y":"away_team", "date" : "Date"})
     bundesliga_final = bundesliga_final.drop(columns=["club_id_x", "club_id_y"])
-    #rename for merge later with footballdata data
-    renamed_columns = {
-        '1 Fc Nurnberg' : "Nurnberg",
-        'Bayer 04 Leverkusen': "Leverkusen",
-        'Borussia Dortmund': "Dortmund",
-        'Borussia Monchengladbach': "M'gladbach",
-        'Eintracht Frankfurt': "Ein Frankfurt",
-        'Fc Bayern Munchen' : "Bayern Munich",
-        'Fc Schalke 04': "Schalke 04",
-        'Fortuna Dusseldorf': "Fortuna Dusseldorf",
-        'Hannover 96': "Hannover",
-        'Hertha Bsc' : "Hertha",
-        'Sc Freiburg' : "Freiburg",
-        'Vfb Stuttgart': "Stuttgart",
-        'Vfl Wolfsburg' : "Wolfsburg",
-        'Sv Werder Bremen': "Werder Bremen",
-        'Fc Augsburg': "Augsburg",
-        'Tsg 1899 Hoffenheim': "Hoffenheim",
-        'Rasenballsport Leipzig': "RB Leipzig",
-        '1 Fsv Mainz 05': "Mainz"
-    }
-    bundesliga_renamed = bundesliga_final.replace(to_replace=renamed_columns)
-    return bundesliga_renamed.sort_values(by='Date')
+    return bundesliga_final.sort_values(by='Date')
 
 def squad_value_df():
     transfermarkt_df = make_transfermarkt_DataFrames()
@@ -151,7 +152,7 @@ def squad_value_df():
 
 # the next function merges the transfermarkt and footballdata data into one dataframe so we cna extract the cumulative sums of the previous five days
 
-def make_merged_df():
+def make_merged_df(season, league):
     import warnings; warnings.filterwarnings("ignore")
     buli_df = make_BuLi_18_19_df_to_merge()
     tmarkt_df = transfermarkt_2018_2019()
