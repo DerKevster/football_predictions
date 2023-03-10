@@ -117,20 +117,15 @@ def get_opp_avg(team, matchday, df, past_matchdays):
     return np.average(oppos_goaldiff)
 
 # Function to get the squad value for a Bundesliga team for the season 2018 in Millions €
-def get_squad_value(club_name, season, df = squad_value_df()):
+def get_squad_value(club_name, squad_value_df)):
     import warnings; warnings.filterwarnings("ignore")
 
-    # Get the right Season
-    season = int(f"20{season[:2]}")
-
     # Extract Features from Transfermarkt
-    squad_value_final = df
+    squad_value_final = squad_value_df
 
     # Getting the right season and the right team
-    season_mask = squad_value_final["season"] == season
     club_mask = squad_value_final["name"] == club_name
-    squad_value_season = squad_value_final[season_mask]
-    now_really_the_final = squad_value_season[club_mask]
+    now_really_the_final = squad_value_final[club_mask]
 
     # Return the squad value per season.
     now_really_the_final
