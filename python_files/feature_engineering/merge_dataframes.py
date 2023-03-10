@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import datetime as dt
 from os.path import expanduser
+from python_files.feature_engineering.teams_list import standard_all_teams
 
 # Generate all dfs from raw_data folder
 HOME = expanduser("~")
@@ -151,30 +152,17 @@ def squad_value_df():
     return squad_value_final
 
 # the next function merges the transfermarkt and footballdata data into one dataframe so we cna extract the cumulative sums of the previous five days
+def make_fifa_DataFrames():
+    # assign path
+    file_count = 0
+    dataframes = {}
+    for path, dirs, files in os.walk(os.path.join(HOME, "code", "DerKevster", "football_predictions", "raw_data", "fifa-data")):
+        file_count = len(files)
+        # appned dfs to dict using file names as keys
+        for i in range(file_count):
+            dataframes[files[i]] = pd.read_csv(os.path.join(HOME, "code", "DerKevster", "football_predictions", "raw_data", "fifa-data", files[i]))
+    return dataframes
 
-def make_merged_df(league, season):
-  import warnings; warnings.filterwarnings("ignore")
-  football_df = make_footballdata_df_to_merge(league, season)
-  tmarkt_df = make_tranfermarkt_df_to_merge(league, season)
-  #fifa_df = make_fifa_df_to_merge(league, season)
-
-  # Get teams
-  translator = tf_to_fb_translator(league)
-  tmarkt_df = tmarkt_df.replace(to_replace=translator)
-
-  merged_df = tmarkt_df.merge(football_df, on=["Date", "HomeTeam"])
-  merged_df.drop(columns=["game_id", "competition_id", "season", "home_club_id", "away_club_id"], inplace=True)
-  merged_df[['round', 'HomeTeam', 'away_team', 'home_club_goals', 'away_club_goals', 'HC', 'AC', 'HS', 'HST', 'AS', 'AST']]
-  merged_df['round'] = merged_df['round'].map(lambda round: round.strip(". Matchday")).map(lambda number: int(number))
-  for index, row in merged_df.iterrows():
-      if merged_df.at[index, "home_club_goals"] > merged_df.at[index, "away_club_goals"]:
-       merged_df.at[index, "outcome"] = 0
-      elif merged_df.at[index, "home_club_goals"] < merged_df.at[index, "away_club_goals"]:
-       merged_df.at[index, "outcome"] = 2
-      else:
-       merged_df.at[index, "outcome"] = 1
-  merged_df=merged_df.rename(columns={'round':'matchday'})
-  return merged_df
 
 def tf_to_fb_translator(league):
 
@@ -311,9 +299,9 @@ def tf_to_fb_translator(league):
   translator = league_translator[league]
   return translator
 
-def fifa_to_fb_translator(league):
+def fifa_to_fb_translator():
 
-    fifa_pl_translator = {
+    fifa_translator = {
         'Aston Villa':'Aston Villa',
         'Norwich City':'Norwich',
         'Brighton & Hove Albion':'Brighton',
@@ -340,10 +328,7 @@ def fifa_to_fb_translator(league):
         'Newcastle United':'Newcastle',
         'Tottenham Hotspur':'Tottenham',
         'Southampton':'Southampton',
-        'Brentford':'Brentford'
-      }
-
-    fifa_bl_translator = {
+        'Brentford':'Brentford',
         'Sv Werder Bremen':'Werder Bremen',
         'Eintracht Frankfurt':'Ein Frankfurt',
         'Fortuna Düsseldorf':'Fortuna Dusseldorf',
@@ -367,9 +352,7 @@ def fifa_to_fb_translator(league):
         '1. FC Union Berlin':'Union Berlin',
         'SC Paderborn 07':'Paderborn',
         'Bayer 04 Leverkusen':'Leverkusen',
-        '1. FC Nürnberg':'Nurnberg'
-      }
-    fifa_ll_translator = {
+        '1. FC Nürnberg':'Nurnberg',
         'Getafe CF' : 'Getafe' ,
         'Girona FC' : 'Girona',
         'FC Barcelona' : 'Barcelona',
@@ -395,10 +378,7 @@ def fifa_to_fb_translator(league):
         'CD Leganés' : 'Leganes',
         'RC Celta' : 'Celta',
         'Levante UD' : 'Levante',
-        'UD Almería' : 'Almeria'
-      }
-
-    fifa_sa_translator = {
+        'UD Almería' : 'Almeria',
         'Udinese':'Udinese',
         'Sampdoria':'Sampdoria',
         'Lazio':'Lazio',
@@ -430,13 +410,101 @@ def fifa_to_fb_translator(league):
         'US Salernitana 1919':'Salernitana',
         'Roma':'Roma'
       }
+    return fifa_translator
 
-    league_translator = {
-        'BL' : fifa_bl_translator,
-        'PL' : fifa_pl_translator,
-        'SA' : fifa_sa_translator,
-        'LL' : fifa_ll_translator
-    }
 
-    translator = league_translator[league]
-    return translator
+# Function to clean the FIFA data
+def clean_FIFA_df(df):
+
+    # Drop some unecessary functions
+    clean_df = df.drop(columns=['ID', 'Photo', 'Flag', 'Club Logo', 'Special',
+    'Preferred Foot', 'Skill Moves', 'Work Rate', 'Body Type', 'Real Face', 'Loaned From', 'Best Overall Rating'])
+
+    # define a function to strip HTML tags
+    def strip_tags(text):
+        return re.sub('<[^<]+?>', '', str(text))
+
+    # apply the function to the 'text' column of the dataframe
+    clean_df['Position'] = clean_df['Position'].apply(strip_tags)
+
+    # create a function to map the position to the part of the team
+    def get_part(position):
+        if position in ['LB', 'RCB', 'LCB', 'RB', 'LWB', 'RWB', 'CB', 'GK']:
+            return 'Defense'
+        elif position in ['RCM', 'CAM', 'LDM', 'RDM', 'LCM', 'CDM', 'LM', 'CM', 'RM', 'LAM', 'RAM']:
+            return 'Midfield'
+        elif position in ['RS', 'RW', 'ST', 'LS', 'LW', 'CF', 'LF', 'RF']:
+            return 'Attack'
+        elif position in ['SUB', 'RW']:
+            return 'Bench'
+        elif position in ['RES', 'nan', ]:
+            return 'Delete'
+        else:
+            return 'Unknown'
+
+    # apply the function to the 'Position' column of the dataframe to make a new column
+    clean_df['Field'] = clean_df['Position'].apply(get_part)
+
+    # Drop the ones with "Delete" in the Column "Field"
+    clean_df = clean_df[clean_df.Field != 'Delete']
+    translator = fifa_to_fb_translator()
+    clean_df = clean_df.replace(to_replace = translator)
+    return clean_df
+
+# Function to create dataframe with Teams and the average FIFA values for Defense, Midfield, Attack and Bench
+def make_fifa_df_to_merge(df, teams):
+    teams = standard_all_teams
+    clean_df = clean_FIFA_df(df)
+
+    # Function to compute the average over each teams defense
+    def get_defense(team, df):
+        return df[df.Club == team][df.Field == 'Defense']['Overall'].mean()
+
+    # Function to compute the average over each teams midfield
+    def get_midfield(team, df):
+        return df[df.Club == team][df.Field == 'Midfield']['Overall'].mean()
+
+    # Function to compute the average over each teams attack
+    def get_attack(team, df):
+        return df[df.Club == team][df.Field == 'Attack']['Overall'].mean()
+
+    # Function to compute the average over each teams bench
+    def get_bench(team, df):
+        return df[df.Club == team][df.Field == 'Bench']['Overall'].mean()
+
+    # Make a dataframe with the list of teams and the 4 features
+    results_df = pd.DataFrame(columns=['Attack', 'Midfield', 'Defense', 'Bench'])
+
+    # fill the dataframe with the results of each function for every team
+    for team in teams:
+        results_df.loc[team, 'Attack'] = get_attack(team, clean_df)
+        results_df.loc[team, 'Midfield'] = get_midfield(team, clean_df)
+        results_df.loc[team, 'Defense'] = get_defense(team, clean_df)
+        results_df.loc[team, 'Bench'] = get_bench(team, clean_df)
+
+    return results_df
+
+
+def make_merged_df(league, season):
+  import warnings; warnings.filterwarnings("ignore")
+  football_df = make_footballdata_df_to_merge(league, season)
+  tmarkt_df = make_tranfermarkt_df_to_merge(league, season)
+  fifa_df = make_fifa_df_to_merge()
+
+  # Get teams
+  translator = tf_to_fb_translator(league)
+  tmarkt_df = tmarkt_df.replace(to_replace=translator)
+
+  merged_df = tmarkt_df.merge(football_df, on=["Date", "HomeTeam"])
+  merged_df.drop(columns=["game_id", "competition_id", "season", "home_club_id", "away_club_id"], inplace=True)
+  merged_df[['round', 'HomeTeam', 'away_team', 'home_club_goals', 'away_club_goals', 'HC', 'AC', 'HS', 'HST', 'AS', 'AST']]
+  merged_df['round'] = merged_df['round'].map(lambda round: round.strip(". Matchday")).map(lambda number: int(number))
+  for index, row in merged_df.iterrows():
+      if merged_df.at[index, "home_club_goals"] > merged_df.at[index, "away_club_goals"]:
+       merged_df.at[index, "outcome"] = 0
+      elif merged_df.at[index, "home_club_goals"] < merged_df.at[index, "away_club_goals"]:
+       merged_df.at[index, "outcome"] = 2
+      else:
+       merged_df.at[index, "outcome"] = 1
+  merged_df=merged_df.rename(columns={'round':'matchday'})
+  return merged_df
