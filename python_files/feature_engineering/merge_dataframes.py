@@ -202,40 +202,6 @@ def clean_FIFA_df(df):
     clean_df = clean_df.replace(to_replace = translator)
     return clean_df
 
-# Function to create dataframe with Teams and the average FIFA values for Defense, Midfield, Attack and Bench
-def make_fifa_df_to_merge(df, teams):
-    teams = standard_all_teams
-    clean_df = clean_FIFA_df(df)
-
-    # Function to compute the average over each teams defense
-    def get_defense(team, df):
-        return df[df.Club == team][df.Field == 'Defense']['Overall'].mean()
-
-    # Function to compute the average over each teams midfield
-    def get_midfield(team, df):
-        return df[df.Club == team][df.Field == 'Midfield']['Overall'].mean()
-
-    # Function to compute the average over each teams attack
-    def get_attack(team, df):
-        return df[df.Club == team][df.Field == 'Attack']['Overall'].mean()
-
-    # Function to compute the average over each teams bench
-    def get_bench(team, df):
-        return df[df.Club == team][df.Field == 'Bench']['Overall'].mean()
-
-    # Make a dataframe with the list of teams and the 4 features
-    results_df = pd.DataFrame(columns=['Attack', 'Midfield', 'Defense', 'Bench'])
-
-    # fill the dataframe with the results of each function for every team
-    for team in teams:
-        results_df.loc[team, 'Attack'] = get_attack(team, clean_df)
-        results_df.loc[team, 'Midfield'] = get_midfield(team, clean_df)
-        results_df.loc[team, 'Defense'] = get_defense(team, clean_df)
-        results_df.loc[team, 'Bench'] = get_bench(team, clean_df)
-
-    return results_df
-
-
 def make_merged_df(league, season):
   import warnings; warnings.filterwarnings("ignore")
   football_df = make_footballdata_df_to_merge(league, season)
