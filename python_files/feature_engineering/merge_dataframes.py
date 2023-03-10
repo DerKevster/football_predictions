@@ -172,13 +172,6 @@ def make_merged_df(season, league):
     return merged_df
 
 def tf_to_fb_translator(league):
-  league_translator = {
-    'BL' : BL_translator,
-    'PL' : PL_translator,
-    'SA' : SA_translator,
-    'LL' : LL_translator
-  }
-
 
   BL_translator = {
       'Sv Werder Bremen':'Werder Bremen',
@@ -301,6 +294,14 @@ def tf_to_fb_translator(league):
       'Us Salernitana 1919':'Salernitana',
       'As Rom':'Roma'
     }
+
+  league_translator = {
+    'BL' : BL_translator,
+    'PL' : PL_translator,
+    'SA' : SA_translator,
+    'LL' : LL_translator
+  }
+
 
   translator = league_translator[league]
   return translator
