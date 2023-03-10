@@ -48,7 +48,7 @@ def make_feature_df(league, season, past_matchdays):
     feature_df = pd.DataFrame()
 
     for index, matchday in merged_df.loc[index_match : , : ].iterrows():
-        new_df = make_dataframe_row(merged_df.at[index, "HomeTeam"], merged_df.at[index, "away_team"], merged_df.at[index,"matchday"], df)
+        new_df = make_dataframe_row(merged_df.at[index, "HomeTeam"], merged_df.at[index, "away_team"], merged_df.at[index,"matchday"], merged_df, fifa_df, squad_value_df, past_matchdays=5)
         feature_df = pd.concat([feature_df, pd.DataFrame(new_df)], axis=0)
     feature_df = feature_df.reset_index()
     feature_df = feature_df.drop(columns=["index"])
