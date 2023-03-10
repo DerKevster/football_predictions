@@ -5,30 +5,33 @@ def make_dataframe_row(home, away, matchday, df, past_matchdays = 5):
     dicto = {}
     dicto = {'home':home,
              'away':away,
-             'matchday': matchday,
-             'shots_h':ff.get_shots(home, matchday, df, past_matchdays),
-             'targets_h':ff.get_targets(home, matchday, df, past_matchdays),
-             'goals_h':ff.get_goals(home, matchday, df, past_matchdays),
-             'conc_h':ff.get_conc(home, matchday, df, past_matchdays),
-             'corner_h':ff.get_corner(home, matchday, df, past_matchdays),
-             'goaldiff_h':ff.get_goal_diff(home, matchday, df),
-             'opp_avg_h':ff.get_opp_avg(home, matchday, df, past_matchdays),
-             'value_h':ff.get_squad_value(home),
-             'targets_a':ff.get_targets(away, matchday, df, past_matchdays),
-             'shots_a':ff.get_shots(away, matchday, df, past_matchdays),
-             'goals_a':ff.get_goals(away, matchday, df, past_matchdays),
-             'conc_a':ff.get_conc(away, matchday, df, past_matchdays),
-             'corner_a':ff.get_corner(away, matchday, df, past_matchdays),
-             'goaldiff_a':ff.get_goal_diff(away, matchday, df),
-             'opp_avg_a':ff.get_opp_avg(away, matchday, df, past_matchdays),
-             'value_a':ff.get_squad_value(away),
-             'outcome':ff.get_outcome(home, away, matchday, df)}
-             'home_atk' :
-             'home_mid' :
-             'home_def' :
-             'away_atk' :
-             'away_mid' :
-             'away_def' :
+             'matchday' : matchday,
+             'shots_h' : ff.get_shots(home, matchday, df, past_matchdays),
+             'targets_h' : ff.get_targets(home, matchday, df, past_matchdays),
+             'goals_h' : ff.get_goals(home, matchday, df, past_matchdays),
+             'conc_h' : ff.get_conc(home, matchday, df, past_matchdays),
+             'corner_h' : ff.get_corner(home, matchday, df, past_matchdays),
+             'goaldiff_h' : ff.get_goal_diff(home, matchday, df),
+             'opp_avg_h' : ff.get_opp_avg(home, matchday, df, past_matchdays),
+             'value_h' : ff.get_squad_value(home),
+             'attack_h' : ff.get_attack(home),
+             'midfield_h' : ff.get_midfield(home),
+             'defense_h' : ff.get_defense(home),
+             'bench_h' : ff.get_bench(home),
+             'targets_a' : ff.get_targets(away, matchday, df, past_matchdays),
+             'shots_a' : ff.get_shots(away, matchday, df, past_matchdays),
+             'goals_a' : ff.get_goals(away, matchday, df, past_matchdays),
+             'conc_a' : ff.get_conc(away, matchday, df, past_matchdays),
+             'corner_a' : ff.get_corner(away, matchday, df, past_matchdays),
+             'goaldiff_a' : ff.get_goal_diff(away, matchday, df),
+             'opp_avg_a' : ff.get_opp_avg(away, matchday, df, past_matchdays),
+             'value_a' : ff.get_squad_value(away),
+             'attack_a' : ff.get_attack(away),
+             'midfield_a' : ff.get_midfield(away),
+             'defense_a' : ff.get_defense(away),
+             'bench_a' : ff.get_bench(away),
+             'outcome' : ff.get_outcome(home, away, matchday, df)}
+
     return pd.DataFrame(dicto, index=[0])
 
 
