@@ -1,39 +1,49 @@
 import numpy as np
 from xgboost import XGBClassifier
-from sklearn.model_selection import RandomizedSearchCV, cross_val_score, train_test_split
-from sklearn.metrics import accuracy_score
+from sklearn.model_selection import RandomizedSearchCV, train_test_split
+from sklearn.metrics import accuracy_score, f1_score
+import python_files.ml_logic.feature_dataframe as fd
+from python_files.feature_engineering.merge_dataframes import make_merged_df
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
 
-def get_model(data):
 
-    data = data.drop(columns=['home', 'away', 'date'])
+def basemodel(data):
+    #create Dataframe
+    #df = make_merged_df()
+    #data = fd.make_feature_df(df,5)
 
-    X = data.drop(columns=['win_home', 'draw', 'win_away'])
-    y = data[['win_home', 'draw', 'win_away']]
+    # Calculate correlation matrix
+    corr_matrix = data.corr()
 
-    xgb = XGBClassifier(max_depth=10, n_estimators=100, learning_rate=0.1, objective='multi:softmax', num_class=3, random_state=42)
-    model = xgb.fit(X, y)
+    # Plot correlation matrix as a clustermap
+    sns.clustermap(corr_matrix, annot=True, cmap='coolwarm', figsize=(20, 20))
+    plt.title("Feature Correlation Clustermap")
+    plt.show()
 
-    return model
+    #Create X and y
+    X = data.drop(columns=['home','away','matchday','outcome'],axis=1)
+    y = data['outcome']
 
-def get_validation(data):
+    # Split data into train, test set
+    X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size = 0.2, random_state = 42)
 
-    xgb = get_model(data)
+    # Scale data
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled= scaler.transform(X_test)
 
-    scores = cross_val_score(xgb, X, y, cv=5, scoring='accuracy')
+    # optimized model
+    xgb = XGBClassifier(objective='multi:softmax', num_class=3,learning_rate=0.01, colsample_bytree=0.8, max_depth=3, n_estimators=50, subsample=0.8)
+    # fit model
+    xgb.fit(X_train_scaled, y_train)
+    # make predictions
+    pred = xgb.predict(X_test_scaled)
 
-    params = [
-        {'learning_rate': [0.0001, 0.001, 0.01, 0.1, 0.2, 0.3]},
-        {'n_estimators': [int(x) for x in np.linspace(start=100, stop=500, num=9)]},
-    ]
+    # evaluate predictions
+    accuracy = accuracy_score(pred, y_test)
+    f1 = f1_score(pred, y_test, average="weighted")
 
-    rgs = RandomizedSearchCV(estimator=xgb, param_distributions=params, n_iter=20, cv=5, random_state=42, n_jobs=-1,
-                            scoring='accuracy', return_train_score=True)
-
-    rgs.fit()
-    return print(f'The mean accuracy score is {scores.mean()}') and print(f'the best parameters are {rgs.results(gs=rgs, print_all=False)}')
-
-def get_prediction(data, X_test):
-
-    xgb = get_model(data)
-
-    return xgb.predict(X_test)
+    return f'The Accuracy is: {accuracy} and the F1 Score is: {f1}'
