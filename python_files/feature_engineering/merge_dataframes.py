@@ -6,6 +6,8 @@ import pandas as pd
 import numpy as np
 import datetime as dt
 from os.path import expanduser
+from python_files.feature_engineering.teams_list import standard_all_teams
+from python_files.feature_engineering.team_translator import *
 
 # Generate all dfs from raw_data folder
 HOME = expanduser("~")
@@ -33,20 +35,43 @@ def make_transfermarkt_DataFrames():
             dataframes[files[i].replace('.csv', '')] = pd.read_csv(os.path.join(HOME, "code", "DerKevster", "football_predictions", "raw_data", "data-transfermarkt", files[i]))
     return dataframes
 
-def make_BuLi_18_19_df_to_merge():
+def make_footballdata_df_to_merge(league, season):
     # Extract features from BuLi_18-19
     footballdata_dfs = make_footballdatauk_DataFrames()
-    BuLi_18_19_df = footballdata_dfs['BuLi_18-19.csv']
+
+    # Translate league names
+    league_translator = {
+    'BL' : 'BuLi',
+    'PL' : 'Prem',
+    'SA' : 'SerieA',
+    'LL' : 'LaLiga'
+    }
+
+    league_translated = league_translator[league]
+    league_season_df = footballdata_dfs[f'{league_translated}_{season}.csv']
     # Strip whitespace from column names
-    BuLi_18_19_df.columns = BuLi_18_19_df.columns.str.strip()
+    league_season_df.columns = league_season_df.columns.str.strip()
     # Sort by dates as datetime objects
-    BuLi_18_19_df['Date'] = pd.to_datetime(BuLi_18_19_df['Date'], dayfirst=True)
-    BuLi_18_19_df.sort_values(by='Date', ascending=True)
+    league_season_df['Date'] = pd.to_datetime(league_season_df['Date'], dayfirst=True)
+    league_season_df.sort_values(by='Date', ascending=True)
     # Get follwing Columns: 'Date' 'HomeTeam' 'HC' 'AC' 'HS' 'HST' 'AS' 'AST' in a df to merge with transfermarkt data
-    footballdata_df_to_merge = BuLi_18_19_df[['Date', 'HomeTeam', 'HC', 'AC', 'HS', 'HST', 'AS', 'AST']]
+    footballdata_df_to_merge = league_season_df[['Date', 'HomeTeam', 'HC', 'AC', 'HS', 'HST', 'AS', 'AST']]
     return footballdata_df_to_merge
 
-def transfermarkt_2018_2019():
+
+def make_tranfermarkt_df_to_merge(league, season):
+    # League translation
+    league_translator = {
+    "BL":"L1",
+    "PL":"GB1",
+    "LL":"ES1",
+    "SA":"IT1"
+    }
+    league = league_translator[league]
+
+    # Season translator
+    season = int(f"20{season[:2]}")
+
     # Extract Features from Transfermarkt
     transfermarkt_df = make_transfermarkt_DataFrames()
     # Get Games and Clubs
@@ -57,11 +82,11 @@ def transfermarkt_2018_2019():
     games_clean.loc[:, "date"] = pd.to_datetime(games_clean.loc[:, "date"])
 
     # Select the Bundesliga (L1)
-    bundesliga_games = games["competition_id"] == "L1"
+    bundesliga_games = games["competition_id"] == league
     bundesliga_df = games_clean[bundesliga_games]
 
     # Select season 2018/19
-    season_2018 = bundesliga_df["season"] == 2018
+    season_2018 = bundesliga_df["season"] == season
     bundesliga_2018 = bundesliga_df[season_2018]
     bundesliga_2018_sorted = bundesliga_2018.sort_values(by=["home_club_id", "date"])
 
@@ -73,31 +98,10 @@ def transfermarkt_2018_2019():
     bundesliga_final = bund.merge(clubs_clean, left_on="away_club_id", right_on="club_id")
     bundesliga_final = bundesliga_final.rename(columns= {"name_x":"HomeTeam", "name_y":"away_team", "date" : "Date"})
     bundesliga_final = bundesliga_final.drop(columns=["club_id_x", "club_id_y"])
-    #rename for merge later with footballdata data
-    renamed_columns = {
-        '1 Fc Nurnberg' : "Nurnberg",
-        'Bayer 04 Leverkusen': "Leverkusen",
-        'Borussia Dortmund': "Dortmund",
-        'Borussia Monchengladbach': "M'gladbach",
-        'Eintracht Frankfurt': "Ein Frankfurt",
-        'Fc Bayern Munchen' : "Bayern Munich",
-        'Fc Schalke 04': "Schalke 04",
-        'Fortuna Dusseldorf': "Fortuna Dusseldorf",
-        'Hannover 96': "Hannover",
-        'Hertha Bsc' : "Hertha",
-        'Sc Freiburg' : "Freiburg",
-        'Vfb Stuttgart': "Stuttgart",
-        'Vfl Wolfsburg' : "Wolfsburg",
-        'Sv Werder Bremen': "Werder Bremen",
-        'Fc Augsburg': "Augsburg",
-        'Tsg 1899 Hoffenheim': "Hoffenheim",
-        'Rasenballsport Leipzig': "RB Leipzig",
-        '1 Fsv Mainz 05': "Mainz"
-    }
-    bundesliga_renamed = bundesliga_final.replace(to_replace=renamed_columns)
-    return bundesliga_renamed.sort_values(by='Date')
+    return bundesliga_final.sort_values(by='Date')
 
-def squad_value_df():
+def make_squad_value_df(season):
+    season = int(f"20{season[:2]}")
     transfermarkt_df = make_transfermarkt_DataFrames()
 
     # Get both DataFrames
@@ -126,46 +130,96 @@ def squad_value_df():
     squad_value_final["season"] = squad_value_final["season"].astype("int")
 
     # Change the squad names from transfermarkt names to football-db names
-    renamed_columns = {
-        '1 Fc Nurnberg' : "Nurnberg",
-        'Bayer 04 Leverkusen': "Leverkusen",
-        'Borussia Dortmund': "Dortmund",
-        'Borussia Monchengladbach': "M'gladbach",
-        'Eintracht Frankfurt': "Ein Frankfurt",
-        'Fc Bayern Munchen' : "Bayern Munich",
-        'Fc Schalke 04': "Schalke 04",
-        'Fortuna Dusseldorf': "Fortuna Dusseldorf",
-        'Hannover 96': "Hannover",
-        'Hertha Bsc' : "Hertha",
-        'Sc Freiburg' : "Freiburg",
-        'Vfb Stuttgart': "Stuttgart",
-        'Vfl Wolfsburg' : "Wolfsburg",
-        'Sv Werder Bremen': "Werder Bremen",
-        'Fc Augsburg': "Augsburg",
-        'Tsg 1899 Hoffenheim': "Hoffenheim",
-        'Rasenballsport Leipzig': "RB Leipzig",
-        '1 Fsv Mainz 05': "Mainz"
-    }
-    squad_value_final = squad_value_final.replace(to_replace=renamed_columns)
+    bl_translator = tf_to_fb_translator("BL")
+    pl_translator = tf_to_fb_translator("PL")
+    ll_translator = tf_to_fb_translator("LL")
+    sa_translator = tf_to_fb_translator("SA")
+    squad_value_final = squad_value_final.replace(to_replace=bl_translator)
+    squad_value_final = squad_value_final.replace(to_replace=pl_translator)
+    squad_value_final = squad_value_final.replace(to_replace=ll_translator)
+    squad_value_final = squad_value_final.replace(to_replace=sa_translator)
+    season_mask = squad_value_final['season'] == season
+    squad_value_final = squad_value_final[season_mask]
     return squad_value_final
 
 # the next function merges the transfermarkt and footballdata data into one dataframe so we cna extract the cumulative sums of the previous five days
+def make_fifa_DataFrames():
+    # assign path
+    file_count = 0
+    dataframes = {}
+    for path, dirs, files in os.walk(os.path.join(HOME, "code", "DerKevster", "football_predictions", "raw_data", "fifa-data")):
+        file_count = len(files)
+        # appned dfs to dict using file names as keys
+        for i in range(file_count):
+            dataframes[files[i]] = pd.read_csv(os.path.join(HOME, "code", "DerKevster", "football_predictions", "raw_data", "fifa-data", files[i]))
+    return dataframes
 
-def make_merged_df():
-    import warnings; warnings.filterwarnings("ignore")
-    buli_df = make_BuLi_18_19_df_to_merge()
-    tmarkt_df = transfermarkt_2018_2019()
+# Function to clean the FIFA data
+def clean_FIFA_df(df):
 
-    merged_df = tmarkt_df.merge(buli_df, on=["Date", "HomeTeam"])
-    merged_df.drop(columns=["game_id", "competition_id", "season", "home_club_id", "away_club_id"], inplace=True)
-    merged_df[['round', 'HomeTeam', 'away_team', 'home_club_goals', 'away_club_goals', 'HC', 'AC', 'HS', 'HST', 'AS', 'AST']]
-    merged_df['round'] = merged_df['round'].map(lambda round: round.strip(". Matchday")).map(lambda number: int(number))
-    for index, row in merged_df.iterrows():
-        if merged_df.at[index, "home_club_goals"] > merged_df.at[index, "away_club_goals"]:
-         merged_df.at[index, "outcome"] = 2
-        elif merged_df.at[index, "home_club_goals"] < merged_df.at[index, "away_club_goals"]:
-         merged_df.at[index, "outcome"] = 0
+    # Drop some unecessary functions
+    clean_df = df.drop(columns=['ID', 'Photo', 'Flag', 'Club Logo', 'Special',
+    'Preferred Foot', 'Skill Moves', 'Work Rate', 'Body Type', 'Real Face', 'Loaned From', 'Best Overall Rating'])
+
+    # define a function to strip HTML tags
+    def strip_tags(text):
+        return re.sub('<[^<]+?>', '', str(text))
+
+    # apply the function to the 'text' column of the dataframe
+    clean_df['Position'] = clean_df['Position'].apply(strip_tags)
+
+    # create a function to map the position to the part of the team
+    def get_part(position):
+        if position in ['LB', 'RCB', 'LCB', 'RB', 'LWB', 'RWB', 'CB', 'GK']:
+            return 'Defense'
+        elif position in ['RCM', 'CAM', 'LDM', 'RDM', 'LCM', 'CDM', 'LM', 'CM', 'RM', 'LAM', 'RAM']:
+            return 'Midfield'
+        elif position in ['RS', 'RW', 'ST', 'LS', 'LW', 'CF', 'LF', 'RF']:
+            return 'Attack'
+        elif position in ['SUB', 'RW']:
+            return 'Bench'
+        elif position in ['RES', 'nan', ]:
+            return 'Delete'
         else:
-         merged_df.at[index, "outcome"] = 1
-    merged_df=merged_df.rename(columns={'round':'matchday'})
-    return merged_df
+            return 'Unknown'
+
+    # apply the function to the 'Position' column of the dataframe to make a new column
+    clean_df['Field'] = clean_df['Position'].apply(get_part)
+
+    # Drop the ones with "Delete" in the Column "Field"
+    clean_df = clean_df[clean_df.Field != 'Delete']
+    translator = fifa_to_fb_translator()
+    clean_df = clean_df.replace(to_replace = translator)
+    return clean_df
+
+def make_merged_df(league, season):
+  import warnings; warnings.filterwarnings("ignore")
+  football_df = make_footballdata_df_to_merge(league, season)
+  tmarkt_df = make_tranfermarkt_df_to_merge(league, season)
+
+  # Get teams
+  translator = tf_to_fb_translator(league)
+  tmarkt_df = tmarkt_df.replace(to_replace=translator)
+
+  merged_df = tmarkt_df.merge(football_df, on=["Date", "HomeTeam"])
+  merged_df.drop(columns=["game_id", "competition_id", "season", "home_club_id", "away_club_id"], inplace=True)
+  merged_df[['round', 'HomeTeam', 'away_team', 'home_club_goals', 'away_club_goals', 'HC', 'AC', 'HS', 'HST', 'AS', 'AST']]
+  merged_df['round'] = merged_df['round'].map(lambda round: round.strip(". Matchday")).map(lambda number: int(number))
+  for index, row in merged_df.iterrows():
+      if merged_df.at[index, "home_club_goals"] > merged_df.at[index, "away_club_goals"]:
+       merged_df.at[index, "outcome"] = 0
+      elif merged_df.at[index, "home_club_goals"] < merged_df.at[index, "away_club_goals"]:
+       merged_df.at[index, "outcome"] = 2
+      else:
+       merged_df.at[index, "outcome"] = 1
+  merged_df=merged_df.rename(columns={'round':'matchday'})
+  return merged_df
+
+# Choose a specific FIFA dataframe by giving a season
+def make_fifa_df(season):
+    sea = season[0:2]
+    df = make_fifa_DataFrames()[f'FIFA{sea}_official_data.csv']
+
+    # Clean the data
+    clean_df = clean_FIFA_df(df)
+    return clean_df

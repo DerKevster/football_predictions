@@ -1,4 +1,4 @@
-from python_files.feature_engineering.merge_dataframes import make_transfermarkt_DataFrames, squad_value_df
+from python_files.feature_engineering.merge_dataframes import make_transfermarkt_DataFrames, make_squad_value_df, clean_FIFA_df
 import pandas as pd
 import numpy as np
 
@@ -117,23 +117,19 @@ def get_opp_avg(team, matchday, df, past_matchdays):
     return np.average(oppos_goaldiff)
 
 # Function to get the squad value for a Bundesliga team for the season 2018 in Millions €
-def get_squad_value(club_name, df = squad_value_df()):
+def get_squad_value(club_name, squad_value_df):
     import warnings; warnings.filterwarnings("ignore")
 
     # Extract Features from Transfermarkt
-    squad_value_final = df
+    squad_value_final = squad_value_df
 
     # Getting the right season and the right team
-    season_mask = squad_value_final["season"] == 2018
     club_mask = squad_value_final["name"] == club_name
-    competition_mask = squad_value_final["domestic_competition_id"] == "L1"
-    squad_value_season = squad_value_final[season_mask]
-    now_really_the_final = squad_value_season[club_mask]
-    bundesliga_value = now_really_the_final[competition_mask]
+    now_really_the_final = squad_value_final[club_mask]
 
     # Return the squad value per season.
-    bundesliga_value
-    return (bundesliga_value["market_value_in_eur"].max()/1000000)
+    now_really_the_final
+    return (now_really_the_final["market_value_in_eur"].max()/1000000)
 
 # Make a dataframe of the current match day
 def make_current_matchday_df(matchday, df):
@@ -154,3 +150,19 @@ def get_outcome(home, away, matchday, df):
         elif current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['home_club_goals'] == current_game['away_club_goals']:
             outcome = 1
     return outcome
+
+ # Function to compute the average over each teams defense
+def get_defense(team, clean_df):
+    return round(clean_df[clean_df.Club == team][clean_df.Field == 'Defense']['Overall'].mean(),1)
+
+# Function to compute the average over each teams midfield
+def get_midfield(team, clean_df):
+    return round(clean_df[clean_df.Club == team][clean_df.Field == 'Midfield']['Overall'].mean(),1)
+
+# Function to compute the average over each teams attack
+def get_attack(team, clean_df):
+    return round(clean_df[clean_df.Club == team][clean_df.Field == 'Attack']['Overall'].mean(),1)
+
+# Function to compute the average over each teams bench
+def get_bench(team, clean_df):
+    return round(clean_df[clean_df.Club == team][clean_df.Field == 'Bench']['Overall'].mean(),1)
