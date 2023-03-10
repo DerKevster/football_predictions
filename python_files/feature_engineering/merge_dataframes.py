@@ -100,7 +100,8 @@ def make_tranfermarkt_df_to_merge(league, season):
     bundesliga_final = bundesliga_final.drop(columns=["club_id_x", "club_id_y"])
     return bundesliga_final.sort_values(by='Date')
 
-def squad_value_df():
+def make_squad_value_df(season):
+    season = int(f"20{season[:2]}")
     transfermarkt_df = make_transfermarkt_DataFrames()
 
     # Get both DataFrames
@@ -137,6 +138,8 @@ def squad_value_df():
     squad_value_final = squad_value_final.replace(to_replace=pl_translator)
     squad_value_final = squad_value_final.replace(to_replace=ll_translator)
     squad_value_final = squad_value_final.replace(to_replace=sa_translator)
+    season_mask = squad_value_final['season'] == season
+    squad_value_final = squad_value_final[season_mask]
     return squad_value_final
 
 # the next function merges the transfermarkt and footballdata data into one dataframe so we cna extract the cumulative sums of the previous five days
