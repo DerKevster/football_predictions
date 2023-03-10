@@ -129,27 +129,14 @@ def squad_value_df():
     squad_value_final["season"] = squad_value_final["season"].astype("int")
 
     # Change the squad names from transfermarkt names to football-db names
-    renamed_columns = {
-        '1 Fc Nurnberg' : "Nurnberg",
-        'Bayer 04 Leverkusen': "Leverkusen",
-        'Borussia Dortmund': "Dortmund",
-        'Borussia Monchengladbach': "M'gladbach",
-        'Eintracht Frankfurt': "Ein Frankfurt",
-        'Fc Bayern Munchen' : "Bayern Munich",
-        'Fc Schalke 04': "Schalke 04",
-        'Fortuna Dusseldorf': "Fortuna Dusseldorf",
-        'Hannover 96': "Hannover",
-        'Hertha Bsc' : "Hertha",
-        'Sc Freiburg' : "Freiburg",
-        'Vfb Stuttgart': "Stuttgart",
-        'Vfl Wolfsburg' : "Wolfsburg",
-        'Sv Werder Bremen': "Werder Bremen",
-        'Fc Augsburg': "Augsburg",
-        'Tsg 1899 Hoffenheim': "Hoffenheim",
-        'Rasenballsport Leipzig': "RB Leipzig",
-        '1 Fsv Mainz 05': "Mainz"
-    }
-    squad_value_final = squad_value_final.replace(to_replace=renamed_columns)
+    bl_translator = tf_to_fb_translator("BL")
+    pl_translator = tf_to_fb_translator("PL")
+    ll_translator = tf_to_fb_translator("LL")
+    sa_translator = tf_to_fb_translator("SA")
+    squad_value_final = squad_value_final.replace(to_replace=bl_translator)
+    squad_value_final = squad_value_final.replace(to_replace=pl_translator)
+    squad_value_final = squad_value_final.replace(to_replace=ll_translator)
+    squad_value_final = squad_value_final.replace(to_replace=sa_translator)
     return squad_value_final
 
 # the next function merges the transfermarkt and footballdata data into one dataframe so we cna extract the cumulative sums of the previous five days
