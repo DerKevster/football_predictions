@@ -1,4 +1,4 @@
-from python_files.feature_engineering.merge_dataframes import make_transfermarkt_DataFrames, squad_value_df
+from python_files.feature_engineering.merge_dataframes import make_transfermarkt_DataFrames, squad_value_df, clean_FIFA_df
 import pandas as pd
 import numpy as np
 
@@ -154,3 +154,23 @@ def get_outcome(home, away, matchday, df):
         elif current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['home_club_goals'] == current_game['away_club_goals']:
             outcome = 1
     return outcome
+
+ # Function to compute the average over each teams defense
+def get_defense(team):
+    df = clean_FIFA_df()
+    return df[df.Club == team][df.Field == 'Defense']['Overall'].mean()
+
+# Function to compute the average over each teams midfield
+def get_midfield(team):
+    df = clean_FIFA_df()
+    return df[df.Club == team][df.Field == 'Midfield']['Overall'].mean()
+
+# Function to compute the average over each teams attack
+def get_attack(team):
+    df = clean_FIFA_df()
+    return df[df.Club == team][df.Field == 'Attack']['Overall'].mean()
+
+# Function to compute the average over each teams bench
+def get_bench(team):
+    df = clean_FIFA_df()
+    return df[df.Club == team][df.Field == 'Bench']['Overall'].mean()
