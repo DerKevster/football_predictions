@@ -9,18 +9,19 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 
 
-def basemodel(data):
+def make_basemodel(data, matrix=False):
     #create Dataframe
     #df = make_merged_df()
     #data = fd.make_feature_df(df,5)
 
     # Calculate correlation matrix
-    corr_matrix = data.corr()
+    if matrix=True:
+        corr_matrix = data.corr()
 
-    # Plot correlation matrix as a clustermap
-    sns.clustermap(corr_matrix, annot=True, cmap='coolwarm', figsize=(20, 20))
-    plt.title("Feature Correlation Clustermap")
-    plt.show()
+        # Plot correlation matrix as a clustermap
+        sns.clustermap(corr_matrix, annot=True, cmap='coolwarm', figsize=(20, 20))
+        plt.title("Feature Correlation Clustermap")
+        plt.show()
 
     #Create X and y
     X = data.drop(columns=['home','away','matchday','outcome'],axis=1)
