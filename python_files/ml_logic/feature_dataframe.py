@@ -2,6 +2,10 @@ import pandas as pd
 from python_files.feature_engineering import feature_functions as ff
 from python_files.feature_engineering.merge_dataframes import make_merged_df, make_fifa_df, make_squad_value_df
 
+# Standard League and Season inputs:
+# Leagues: ['PL', 'BL', 'LL', 'SA']
+# Seasons: ['18-19', '19-20', '20-21', '21-22', '22-23']
+
 def make_dataframe_row(home, away, matchday, merged_df, fifa_df, squad_value_df, past_matchdays = 5):
 
     dicto = {}
@@ -35,7 +39,6 @@ def make_dataframe_row(home, away, matchday, merged_df, fifa_df, squad_value_df,
              'outcome' : ff.get_outcome(home, away, matchday, merged_df)}
 
     return pd.DataFrame(dicto, index=[0])
-
 
 
 def make_feature_df(league, season, past_matchdays):

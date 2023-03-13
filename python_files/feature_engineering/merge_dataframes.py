@@ -81,24 +81,24 @@ def make_tranfermarkt_df_to_merge(league, season):
     games_clean = games[["game_id", "round", "competition_id", "season", "date", "home_club_id", "away_club_id", "home_club_goals", "away_club_goals"]]
     games_clean.loc[:, "date"] = pd.to_datetime(games_clean.loc[:, "date"])
 
-    # Select the Bundesliga (L1)
-    bundesliga_games = games["competition_id"] == league
-    bundesliga_df = games_clean[bundesliga_games]
+    # Select the league
+    league_games = games["competition_id"] == league
+    league_df = games_clean[ league_games]
 
-    # Select season 2018/19
-    season_2018 = bundesliga_df["season"] == season
-    bundesliga_2018 = bundesliga_df[season_2018]
-    bundesliga_2018_sorted = bundesliga_2018.sort_values(by=["home_club_id", "date"])
+    # Select season
+    season =  league_df["season"] == season
+    league_season = league_df[season]
+    league_season_sorted = league.sort_values(by=["home_club_id", "date"])
 
     #drop duplicates
-    bundesliga_final18 = bundesliga_2018_sorted.drop_duplicates(subset=["date", "home_club_id"])
+    league_season_final = league_season_sorted.drop_duplicates(subset=["date", "home_club_id"])
 
     #merge by combining club id and club name
-    bund = bundesliga_final18.merge(clubs_clean, left_on="home_club_id", right_on="club_id")
-    bundesliga_final = bund.merge(clubs_clean, left_on="away_club_id", right_on="club_id")
-    bundesliga_final = bundesliga_final.rename(columns= {"name_x":"HomeTeam", "name_y":"away_team", "date" : "Date"})
-    bundesliga_final = bundesliga_final.drop(columns=["club_id_x", "club_id_y"])
-    return bundesliga_final.sort_values(by='Date')
+    league_final = league_season_final.merge(clubs_clean, left_on="home_club_id", right_on="club_id")
+    league_final = league_final.merge(clubs_clean, left_on="away_club_id", right_on="club_id")
+    league_final = league_final.rename(columns= {"name_x":"HomeTeam", "name_y":"away_team", "date" : "Date"})
+    league_final = league_final.drop(columns=["club_id_x", "club_id_y"])
+    return league_final.sort_values(by='Date')
 
 def make_squad_value_df(season):
     season = int(f"20{season[:2]}")
