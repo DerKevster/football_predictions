@@ -203,7 +203,7 @@ def make_merged_df(league, season):
 
   merged_df = tmarkt_df.merge(football_df, on=["Date", "HomeTeam"])
   merged_df.drop(columns=["game_id", "competition_id", "season", "home_club_id", "away_club_id"], inplace=True)
-  merged_df[['round', 'HomeTeam', 'away_team', 'home_club_goals', 'away_club_goals', 'HC', 'AC', 'HS', 'HST', 'AS', 'AST']]
+  merged_df[['Date','round', 'HomeTeam', 'away_team', 'home_club_goals', 'away_club_goals', 'HC', 'AC', 'HS', 'HST', 'AS', 'AST']]
   merged_df['round'] = merged_df['round'].map(lambda round: round.strip(". Matchday")).map(lambda number: int(number))
   for index, row in merged_df.iterrows():
       if merged_df.at[index, "home_club_goals"] > merged_df.at[index, "away_club_goals"]:
@@ -213,7 +213,7 @@ def make_merged_df(league, season):
       else:
        merged_df.at[index, "outcome"] = 1
   merged_df=merged_df.rename(columns={'round':'matchday'})
-  return merged_df
+  return merged_df.sort_values(by = 'Date')
 
 # Choose a specific FIFA dataframe by giving a season
 def make_fifa_df(season):
