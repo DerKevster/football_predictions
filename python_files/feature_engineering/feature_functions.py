@@ -3,23 +3,17 @@ import pandas as pd
 import numpy as np
 
 # Make a dataframe of the last [past_matches] match days
-def make_past_matches_df(matchday, df, past_matches):
-    prev_matchday_df = df.loc[df['matchday'] == matchday-1]
-    past_matches_df = pd.DataFrame()
-
-    if matchday - past_matches > 0:
-        if past_matches == 1:
-            return prev_matchday_df
-        else:
-            for i in range(past_matches):
-                next_past_matches_df = df.loc[df['matchday'] == matchday-1-i]
-                if i == 0:
-                    past_matches_df = prev_matchday_df
-                else:
-                    past_matches_df = pd.concat([past_matches_df, next_past_matches_df], axis=0)
-    else:
-        print("Error: The past matchdays you are asking for do not exist")
-    return past_matches_df
+def make_past_matches_df(date, team, merged_df, past_matches):
+  mask_home = merged_df["HomeTeam"] == team
+  mask_away = merged_df["away_team"] == team
+  home_df = merged_df[mask_home]
+  away_df = merged_df[mask_away]
+  past_game_df = pd.concat([home_df, away_df], axis=0).sort_values(by="Date").reset_index()
+  past_game_df = past_game_df.drop(columns=["index"])
+  # Get the index of the current date
+  current_index = past_game_df[past_game_df["Date"] == date].index[0]
+  past_game_df = past_game_df.loc[current_index-past_matches : current_index-1, :]
+  return past_game_df
 
 
 # Base function to count totals of specific stat (goals, goals conceded, shots, shots on target and corners) depending on if team is home or away, for the given past matchdays
