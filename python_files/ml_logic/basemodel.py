@@ -1,7 +1,7 @@
 import numpy as np
 from xgboost import XGBClassifier
 from sklearn.model_selection import RandomizedSearchCV, train_test_split
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import accuracy_score, f1_score, classification_report
 import python_files.ml_logic.feature_dataframe as fd
 from python_files.feature_engineering.merge_dataframes import make_merged_df
 import seaborn as sns
@@ -53,4 +53,4 @@ def make_basemodel(data, matrix=False):
     report = classification_report(y_true, y_pred, target_names=target_names)
     print(f'Classification Report:\n\n{report}')
 
-    pass
+    return accuracy
