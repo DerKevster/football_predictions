@@ -2,7 +2,12 @@ raw_data/
 notebook/
 *.ipynb
 python_files/__pycache__/*
+python_files/api/__pycache__/*
 python_files/feature_engineering/__pycache__/*
+python_files/interface/__pycache__/*
+python_files/ml_logic/__pycache__/*
+python_files/feature_engineering/__pycache__/*
+**/__pycache__/
 .DS_Store
 football_predictions/OLD baseline_footballdata_merge_df.py
 __pycache__/
