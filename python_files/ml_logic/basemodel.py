@@ -15,7 +15,7 @@ def make_basemodel(data, matrix=False):
     #data = fd.make_feature_df(df,5)
 
     # Calculate correlation matrix
-    if matrix=True:
+    if matrix==True:
         corr_matrix = data.corr()
 
         # Plot correlation matrix as a clustermap
