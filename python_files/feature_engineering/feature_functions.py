@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 # Make a dataframe of the last [past_matches] match days
-def make_past_matches_df(date, team, merged_df, past_matches):
+def make_past_matches_df(team, date, merged_df, past_matches):
   mask_home = merged_df["HomeTeam"] == team
   mask_away = merged_df["away_team"] == team
   home_df = merged_df[mask_home]
@@ -17,8 +17,8 @@ def make_past_matches_df(date, team, merged_df, past_matches):
 
 
 # Base function to count totals of specific stat (goals, goals conceded, shots, shots on target and corners) depending on if team is home or away, for the given past matchdays
-def get_totals(team, matchday, df, past_matches, for_home, for_away):
-  past_matches_df = make_past_matches_df(matchday, df, past_matches)
+def get_totals(team, date, df, past_matches, for_home, for_away):
+  past_matches_df = make_past_matches_df(team, date, df, past_matches)
   stat_count = 0
   for i in range(len(past_matches_df)):
       current_game = past_matches_df.iloc[i, :]
