@@ -103,18 +103,16 @@ def make_current_matchday_df(matchday, df):
     return current_matchday
 
 # function to find if the result of of a specific game is a home win, returns 1 if true and 0 if false
-def get_outcome(home, away, matchday, df):
-    # 0 = Home Team wins, 1 = Draw, 2 = Away Team wins
-    current_matchday_df = make_current_matchday_df(matchday, df)
-    outcome = 0
-    for i in range(len(current_matchday_df)):
-        current_game = current_matchday_df.iloc[i, :]
-        if current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['home_club_goals'] > current_game['away_club_goals']:
+def get_outcome(home, away, df):
+    home_mask = df["HomeTeam"] == home
+    away_mask = df["away_team"] == away
+    match_df = df[home_mask & away_mask].iloc[0]
+    if match_df['home_club_goals'] > match_df['away_club_goals']:
             outcome = 0
-        elif current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['home_club_goals'] < current_game['away_club_goals']:
-            outcome = 2
-        elif current_game['HomeTeam'] == home and current_game['away_team'] == away and current_game['home_club_goals'] == current_game['away_club_goals']:
-            outcome = 1
+    elif match_df['home_club_goals'] < match_df['away_club_goals']:
+        outcome = 2
+    else:
+        outcome = 1
     return outcome
 
  # Function to compute the average over each teams defense
