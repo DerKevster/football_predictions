@@ -166,7 +166,7 @@ def fifa_to_fb_translator():
         'Tottenham Hotspur':'Tottenham',
         'Southampton':'Southampton',
         'Brentford':'Brentford',
-        'Sv Werder Bremen':'Werder Bremen',
+        'SV Werder Bremen':'Werder Bremen',
         'Eintracht Frankfurt':'Ein Frankfurt',
         'Fortuna Düsseldorf':'Fortuna Dusseldorf',
         'FC Augsburg':'Augsburg',
