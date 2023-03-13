@@ -41,17 +41,17 @@ def make_dataframe_row(home, away, date, merged_df, fifa_df, squad_value_df, pas
     return pd.DataFrame(dicto, index=[0])
 
 
-def make_feature_df(league, season, past_matchdays):
+def make_feature_df(league, season, past_matches):
 
     merged_df = make_merged_df(league, season)
     fifa_df = make_fifa_df(season)
     squad_value_df = make_squad_value_df(season)
 
-    index_match = merged_df.index[merged_df['matchday']==(past_matchdays+1)].tolist()[0]
+    index_match = merged_df.index[merged_df['matchday']==(past_matches+1)].tolist()[0]
     feature_df = pd.DataFrame()
 
     for index, matchday in merged_df.loc[index_match : , : ].iterrows():
-        new_df = make_dataframe_row(merged_df.at[index, "HomeTeam"], merged_df.at[index, "away_team"], merged_df.at[index,"matchday"], merged_df, fifa_df, squad_value_df, past_matchdays=5)
+        new_df = make_dataframe_row(merged_df.at[index, "HomeTeam"], merged_df.at[index, "away_team"], merged_df.at[index,"matchday"], merged_df, fifa_df, squad_value_df, past_matches=5)
         feature_df = pd.concat([feature_df, pd.DataFrame(new_df)], axis=0)
     feature_df = feature_df.reset_index()
     feature_df = feature_df.drop(columns=["index"])

@@ -1,7 +1,7 @@
 import numpy as np
 from xgboost import XGBClassifier
 from sklearn.model_selection import RandomizedSearchCV, train_test_split
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import accuracy_score, f1_score, classification_report
 import python_files.ml_logic.feature_dataframe as fd
 from python_files.feature_engineering.merge_dataframes import make_merged_df
 import seaborn as sns
@@ -9,18 +9,19 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 
 
-def basemodel(data):
+def make_basemodel(data, matrix=False):
     #create Dataframe
     #df = make_merged_df()
     #data = fd.make_feature_df(df,5)
 
     # Calculate correlation matrix
-    corr_matrix = data.corr()
+    if matrix==True:
+        corr_matrix = data.corr()
 
-    # Plot correlation matrix as a clustermap
-    sns.clustermap(corr_matrix, annot=True, cmap='coolwarm', figsize=(20, 20))
-    plt.title("Feature Correlation Clustermap")
-    plt.show()
+        # Plot correlation matrix as a clustermap
+        sns.clustermap(corr_matrix, annot=True, cmap='coolwarm', figsize=(20, 20))
+        plt.title("Feature Correlation Clustermap")
+        plt.show()
 
     #Create X and y
     X = data.drop(columns=['home','away','matchday','outcome'],axis=1)
@@ -46,4 +47,10 @@ def basemodel(data):
     accuracy = accuracy_score(pred, y_test)
     f1 = f1_score(pred, y_test, average="weighted")
 
-    return f'The Accuracy is: {accuracy} and the F1 Score is: {f1}'
+    y_true = y_test
+    y_pred = pred
+    target_names = ['home', 'draw', 'away']
+    report = classification_report(y_true, y_pred, target_names=target_names)
+    print(f'Classification Report:\n\n{report}')
+
+    return accuracy
