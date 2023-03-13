@@ -17,8 +17,8 @@ def make_dataframe_row(home, away, date, merged_df, fifa_df, squad_value_df, pas
              'goals_h' : ff.get_goals(home, date, merged_df, past_matches),
              'conc_h' : ff.get_conc(home, date, merged_df, past_matches),
              'corner_h' : ff.get_corners(home, date, merged_df, past_matches),
-             'goaldiff_h' : ff.get_goal_diff(home, date, merged_df),
-             'opp_avg_h' : ff.get_opp_avg(home, date, merged_df, past_matches),
+             'goaldiff_h' : ff.get_goal_diff(home, date, merged_df, past_matches),
+             #'opp_avg_h' : ff.get_opp_avg(home, date, merged_df, past_matches),
              'value_h' : ff.get_squad_value(home, squad_value_df),
              'attack_h' : ff.get_attack(home, fifa_df),
              'midfield_h' : ff.get_midfield(home, fifa_df),
@@ -29,8 +29,8 @@ def make_dataframe_row(home, away, date, merged_df, fifa_df, squad_value_df, pas
              'goals_a' : ff.get_goals(away, date, merged_df, past_matches),
              'conc_a' : ff.get_conc(away, date, merged_df, past_matches),
              'corner_a' : ff.get_corners(away, date, merged_df, past_matches),
-             'goaldiff_a' : ff.get_goal_diff(away, date, merged_df),
-             'opp_avg_a' : ff.get_opp_avg(away, date, merged_df, past_matches),
+             'goaldiff_a' : ff.get_goal_diff(away, date, merged_df, past_matches),
+             #'opp_avg_a' : ff.get_opp_avg(away, date, merged_df, past_matches),
              'value_a' : ff.get_squad_value(away, squad_value_df),
              'attack_a' : ff.get_attack(away, fifa_df),
              'midfield_a' : ff.get_midfield(away, fifa_df),
@@ -51,7 +51,7 @@ def make_feature_df(league, season, past_matches):
     feature_df = pd.DataFrame()
 
     for index, date in merged_df.loc[index_match : , : ].iterrows():
-        new_df = make_dataframe_row(merged_df.at[index, "HomeTeam"], merged_df.at[index, "away_team"], merged_df.at[index,"matchday"], merged_df, fifa_df, squad_value_df, past_matches=5)
+        new_df = make_dataframe_row(merged_df.at[index, "HomeTeam"], merged_df.at[index, "away_team"], merged_df.at[index,"Date"], merged_df, fifa_df, squad_value_df, past_matches=5)
         feature_df = pd.concat([feature_df, pd.DataFrame(new_df)], axis=0)
     feature_df = feature_df.reset_index()
     feature_df = feature_df.drop(columns=["index"])

@@ -61,10 +61,10 @@ def get_goal_diff(team, date, df, past_matches):
     return goal_diff
 
 # Function to get the average seasonal goal difference of the last [past_matches] opponents
-def get_opp_avg(team, matchday, df, past_matches):
+def get_opp_avg(team, date, df, past_matches):
 
     # make dataframe of last [past_matches]
-    past_matches_df = make_past_matches_df(matchday, df, past_matches)
+    past_matches_df = make_past_matches_df(team, date, df, past_matches)
 
     # make list of last n opponents
     oppos = []
@@ -76,7 +76,7 @@ def get_opp_avg(team, matchday, df, past_matches):
             oppos.append(current_game['HomeTeam'])
 
     # get goal differences for all opponents
-    oppos_goaldiff = [get_goal_diff(oppo, matchday, df) for oppo in oppos]
+    oppos_goaldiff = [get_goal_diff(oppo, date, past_matches_df, past_matches) for oppo in oppos]
 
     # return the average value of the opponents goal difference
     return np.average(oppos_goaldiff)
