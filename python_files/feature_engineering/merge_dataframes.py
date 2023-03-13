@@ -88,7 +88,7 @@ def make_tranfermarkt_df_to_merge(league, season):
     # Select season
     season =  league_df["season"] == season
     league_season = league_df[season]
-    league_season_sorted = league.sort_values(by=["home_club_id", "date"])
+    league_season_sorted = league_season.sort_values(by=["home_club_id", "date"])
 
     #drop duplicates
     league_season_final = league_season_sorted.drop_duplicates(subset=["date", "home_club_id"])
