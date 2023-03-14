@@ -6,16 +6,16 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, classific
 from sklearn.preprocessing import StandardScaler
 
 
-def makepredict_df(df, model):
+def make_predict_df(df, model):
 
     #Create X and y
     X = df.drop(columns=['home','away','matchday','outcome'],axis=1)
     y = df['outcome']
-    # Split data into train, test set
+    # Split df into train, test set
     X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size = 0.2, random_state = 42)
 
-    # Scale data
+    # Scale df
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled= scaler.transform(X_test)
@@ -28,7 +28,7 @@ def makepredict_df(df, model):
     proba = mod.predict_proba(X_test_scaled)
 
     df_prob = pd.DataFrame()
-    df_prob[['home','away']] = data.loc[y_test.index, ['home','away']]
+    df_prob[['home','away']] = df.loc[y_test.index, ['home','away']]
     df_prob['outcome'] = y_test
     df_prob['home_win'] = proba[:,0]
     df_prob['draw'] = proba[:,1]
