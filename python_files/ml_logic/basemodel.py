@@ -37,7 +37,7 @@ def make_basemodel(data, matrix=False):
     X_test_scaled= scaler.transform(X_test)
 
     # optimized model
-    xgb = XGBClassifier(objective='multi:softmax', num_class=3,learning_rate=0.01, colsample_bytree=0.8, max_depth=3, n_estimators=50, subsample=0.8)
+    xgb = XGBClassifier(objective='multi:softproba', num_class=3,learning_rate=0.01, colsample_bytree=0.8, max_depth=3, n_estimators=50, subsample=0.8)
     # fit model
     # xgb.fit(X_train_scaled, y_train)
     # # make predictions
