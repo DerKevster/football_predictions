@@ -9,7 +9,7 @@ from sklearn.preprocessing import StandardScaler
 def make_predict_df(df, model):
 
     #Create X and y
-    X = df.drop(columns=['home','away','matchday','outcome'],axis=1)
+    X = df.drop(columns=['home','away','outcome'],axis=1)
     y = df['outcome']
     # Split df into train, test set
     X_train, X_test, y_train, y_test = train_test_split(
