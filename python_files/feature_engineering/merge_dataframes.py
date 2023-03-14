@@ -213,6 +213,7 @@ def make_merged_df(league, season):
       else:
        merged_df.at[index, "outcome"] = 1
   merged_df=merged_df.rename(columns={'round':'matchday'})
+  merged_df = merged_df.reset_index().drop(columns = "index")
   return merged_df.sort_values(by = 'Date')
 
 # Choose a specific FIFA dataframe by giving a season
