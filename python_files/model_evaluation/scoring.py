@@ -1,3 +1,5 @@
+import numpy as np
+
 def make_rps(df, agency='None'):
 
     if agency == 'B365':
