@@ -39,18 +39,18 @@ def make_basemodel(data, matrix=False):
     # optimized model
     xgb = XGBClassifier(objective='multi:softmax', num_class=3,learning_rate=0.01, colsample_bytree=0.8, max_depth=3, n_estimators=50, subsample=0.8)
     # fit model
-    xgb.fit(X_train_scaled, y_train)
-    # make predictions
-    pred = xgb.predict(X_test_scaled)
+    # xgb.fit(X_train_scaled, y_train)
+    # # make predictions
+    # pred = xgb.predict(X_test_scaled)
 
-    # evaluate predictions
-    accuracy = accuracy_score(pred, y_test)
-    f1 = f1_score(pred, y_test, average="weighted")
+    # # evaluate predictions
+    # accuracy = accuracy_score(pred, y_test)
+    # f1 = f1_score(pred, y_test, average="weighted")
 
-    y_true = y_test
-    y_pred = pred
-    target_names = ['home', 'draw', 'away']
-    report = classification_report(y_true, y_pred, target_names=target_names)
-    print(f'Classification Report:\n\n{report}')
+    # y_true = y_test
+    # y_pred = pred
+    # target_names = ['home', 'draw', 'away']
+    # report = classification_report(y_true, y_pred, target_names=target_names)
+    # print(f'Classification Report:\n\n{report}')
 
-    return accuracy
+    return xgb
