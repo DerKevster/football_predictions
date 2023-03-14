@@ -15,7 +15,7 @@ def make_basemodel(data, matrix=False):
     #data = fd.make_feature_df(df,5)
 
     # Calculate correlation matrix
-    if matrix==True:
+    if matrix:
         corr_matrix = data.corr()
 
         # Plot correlation matrix as a clustermap
@@ -24,7 +24,7 @@ def make_basemodel(data, matrix=False):
         plt.show()
 
     #Create X and y
-    X = data.drop(columns=['home','away','matchday','outcome'],axis=1)
+    X = data.drop(columns=['home','away','date','outcome'],axis=1)
     y = data['outcome']
 
     # Split data into train, test set
