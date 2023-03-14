@@ -41,16 +41,41 @@ def make_dataframe_row(home, away, date, merged_df, fifa_df, squad_value_df, pas
     return pd.DataFrame(dicto, index=[0])
 
 
+# Function to get the right starting index so all teams have played at least 5 games
+def get_starting_index(league, season, past_matches = 5):
+  merged_df = make_merged_df(league, season)
+  teams = merged_df["HomeTeam"].unique()
+  index_last_game = 0
+  for team in teams:
+      past_matches = past_matches +1
+      for index, match in merged_df.iterrows():
+          if past_matches == 0:
+              break
+          elif match["HomeTeam"] == team:
+              if index_last_game < index:
+                  index_last_game = index
+              past_matches = past_matches - 1
+          elif match["away_team"] == team:
+              if index_last_game < index:
+                  index_last_game = index
+              past_matches = past_matches - 1
+
+  index_last_game
+  start_index = index_last_game + 1
+  print(f"For the {league} in season {season} the starting match is {merged_df.loc[start_index,['HomeTeam']][0]} vs. {merged_df.loc[start_index,['away_team']][0]}")
+  return start_index
+
+
 def make_feature_df(league, season, past_matches):
 
     merged_df = make_merged_df(league, season)
     fifa_df = make_fifa_df(season)
     squad_value_df = make_squad_value_df(season)
 
-    index_match = merged_df.index[merged_df['matchday']==(past_matches+1)].tolist()[0]
+    starting_index = get_starting_index(league, season, past_matches)
     feature_df = pd.DataFrame()
 
-    for index, date in merged_df.loc[index_match : , : ].iterrows():
+    for index, date in merged_df.loc[starting_index : , : ].iterrows():
         new_df = make_dataframe_row(merged_df.at[index, "HomeTeam"], merged_df.at[index, "away_team"], merged_df.at[index,"Date"], merged_df, fifa_df, squad_value_df, past_matches=5)
         feature_df = pd.concat([feature_df, pd.DataFrame(new_df)], axis=0)
     feature_df = feature_df.reset_index()
