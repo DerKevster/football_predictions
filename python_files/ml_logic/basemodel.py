@@ -24,7 +24,7 @@ def make_basemodel(data, matrix=False):
         plt.show()
 
     #Create X and y
-    X = data.drop(columns=['home','away','matchday','outcome'],axis=1)
+    X = data.drop(columns=['home','away','date','outcome'],axis=1)
     y = data['outcome']
 
     # Split data into train, test set
