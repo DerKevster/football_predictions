@@ -12,7 +12,11 @@ def make_past_matches_df(team, date, merged_df, past_matches):
   past_game_df = past_game_df.drop(columns=["index"])
   # Get the index of the current date
   current_index = past_game_df[past_game_df["Date"] == date].index[0]
-  past_game_df = past_game_df.loc[current_index-past_matches : current_index-1, :]
+  # 1337 means all past games
+  if past_matches == 1337:
+    past_game_df = past_game_df.loc[: current_index - 1, :]
+  else:
+    past_game_df = past_game_df.loc[current_index-past_matches : current_index-1, :]
   return past_game_df
 
 
