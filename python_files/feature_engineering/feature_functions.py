@@ -49,8 +49,8 @@ def get_shots_ot(team, date, df , past_matches):
     return get_totals(team, date, df, past_matches, 'HST', 'AST')
 
 # Function to get the goal difference for a [team] for the entire season
-def get_goal_diff(team, date, df, past_matches):
-    past_matches_df = make_past_matches_df(team, date, df, past_matches)
+def get_goal_diff(team, date, df):
+    past_matches_df = make_past_matches_df(team, date, df, past_matches = 1337)
     goal_diff = 0
     for i in range(len(past_matches_df)):
         current_game = past_matches_df.iloc[i, :]
@@ -59,6 +59,7 @@ def get_goal_diff(team, date, df, past_matches):
         elif current_game['away_team'] == team:
             goal_diff += (current_game['away_club_goals'] - current_game['home_club_goals'])
     return goal_diff
+
 
 # Function to get the average seasonal goal difference of the last [past_matches] opponents
 def get_opp_avg(team, date, df, past_matches):
