@@ -59,8 +59,6 @@ def get_starting_index(league, season, past_matches = 5):
               if index_last_game < index:
                   index_last_game = index
               past_matches = past_matches - 1
-
-  index_last_game
   start_index = index_last_game + 1
   print(f"For the {league} in season {season} the starting match is {merged_df.loc[start_index,['HomeTeam']][0]} vs. {merged_df.loc[start_index,['away_team']][0]}")
   return start_index
@@ -76,7 +74,7 @@ def make_feature_df(league, season, past_matches):
     feature_df = pd.DataFrame()
 
     for index, date in merged_df.loc[starting_index : , : ].iterrows():
-        new_df = make_dataframe_row(merged_df.at[index, "HomeTeam"], merged_df.at[index, "away_team"], merged_df.at[index,"Date"], merged_df, fifa_df, squad_value_df, past_matches=5)
+        new_df = make_dataframe_row(merged_df.at[index, "HomeTeam"], merged_df.at[index, "away_team"], merged_df.at[index,"Date"], merged_df, fifa_df, squad_value_df, past_matches)
         feature_df = pd.concat([feature_df, pd.DataFrame(new_df)], axis=0)
     feature_df = feature_df.reset_index()
     feature_df = feature_df.drop(columns=["index"])
