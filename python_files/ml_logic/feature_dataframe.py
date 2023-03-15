@@ -82,7 +82,7 @@ def make_feature_df(league, season, past_matches):
     feature_df = feature_df.drop(columns=["index"])
     return feature_df
 
-def make_comb_feature_df(leagues, seasons, past_matches)
+def make_comb_feature_df(leagues, seasons, past_matches):
     comb_df = pd.DataFrame()
     for league in leagues:
         for season in seasons:
