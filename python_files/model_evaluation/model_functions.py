@@ -16,7 +16,7 @@ def make_X_y(df):
     return X_train, X_test, y_train, y_test
 
 
-def make_predict_df(df, model, split=True, chrono=False):
+def make_predict_df(df, model, split=True, chrono=False, random_state=42):
 
     if split:
         #Create X and y
@@ -26,7 +26,7 @@ def make_predict_df(df, model, split=True, chrono=False):
         if not chrono:
             # Split df into train, test set
             X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size = 0.2, random_state = 42)
+            X, y, test_size = 0.2, random_state = random_state)
         else:
             X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size = 0.2, shuffle = False)
