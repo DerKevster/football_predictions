@@ -7,7 +7,7 @@ from python_files.feature_engineering.merge_dataframes import make_merged_df
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
-
+from sklearn.ensemble import RandomForestClassifier
 
 def make_basemodel(data, matrix=False):
     #create Dataframe
@@ -54,3 +54,21 @@ def make_basemodel(data, matrix=False):
     # print(f'Classification Report:\n\n{report}')
 
     return xgb
+
+def make_random_forest(df):
+    X = df.drop(columns=['home','away','date','outcome'],axis=1)
+    y = df['outcome']
+
+    # Split data into train, test set
+    X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size = 0.2, random_state = 42)
+
+    # Scale data
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled= scaler.transform(X_test)
+
+    # optimized model
+    random_forest = RandomForestClassifier()
+    random_forest.fit(X_train_scaled, y_train)
+    return random_forest
