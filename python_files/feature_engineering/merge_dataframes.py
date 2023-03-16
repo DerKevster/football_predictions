@@ -212,7 +212,7 @@ def make_merged_df(league, season):
 
 # Choose a specific FIFA dataframe by giving a season
 def make_fifa_df(season):
-    sea = season[0:2]
+    sea = season[-2:]
     df = make_fifa_DataFrames()[f'FIFA{sea}_official_data.csv']
 
     # Clean the data

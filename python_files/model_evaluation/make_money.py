@@ -6,7 +6,7 @@ from python_files.model_evaluation.model_functions import make_predict_df
 from python_files.ml_logic.basemodel import make_basemodel
 
 
-def make_money (betting_odds_df, predict_df, bankroll, bet, threshold):
+def make_money (betting_odds_df, predict_df, bankroll=100, bet=1, threshold=1):
     # create a df with the betting odds and the predicted probabilities
     # make_betting_odds_df(league, season, proba=False)
     # make_predict_df(df, model)

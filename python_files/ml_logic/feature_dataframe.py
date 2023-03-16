@@ -1,6 +1,7 @@
 import pandas as pd
 from python_files.feature_engineering import feature_functions as ff
 from python_files.feature_engineering.merge_dataframes import make_merged_df, make_fifa_df, make_squad_value_df
+import numpy as np
 
 # Standard League and Season inputs:
 # Leagues: ['PL', 'BL', 'LL', 'SA']
@@ -75,6 +76,10 @@ def make_feature_df(league, season, past_matches):
 
     for index, date in merged_df.loc[starting_index : , : ].iterrows():
         new_df = make_dataframe_row(merged_df.at[index, "HomeTeam"], merged_df.at[index, "away_team"], merged_df.at[index,"Date"], merged_df, fifa_df, squad_value_df, past_matches)
+        if np.isnan(new_df.loc[0, "attack_h"]):
+            new_df["attack_h"] = (new_df["midfield_h"]+new_df["defense_h"])/2
+        if np.isnan(new_df.loc[0, "attack_a"]):
+            new_df["attack_a"] = (new_df["midfield_a"]+new_df["defense_a"])/2
         feature_df = pd.concat([feature_df, pd.DataFrame(new_df)], axis=0)
     feature_df = feature_df.reset_index()
     feature_df = feature_df.drop(columns=["index"])
