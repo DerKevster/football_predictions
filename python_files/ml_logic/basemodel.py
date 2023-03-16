@@ -8,6 +8,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC,
+from sklearn.ensemble import AdaBoostClassifier
 
 def make_basemodel(data, matrix=False):
     #create Dataframe
@@ -72,3 +74,12 @@ def make_random_forest(df):
     random_forest = RandomForestClassifier()
     random_forest.fit(X_train_scaled, y_train)
     return random_forest
+
+def make_svc():
+    svc = SVC(kernel='rbf', probability=True)
+    return svc
+
+def adaboost_svc():
+    svc = SVC(kernel='rbf', probability=True)
+    adb_svc = AdaBoostClassifier(svc)
+    return adb_svc
