@@ -1,19 +1,43 @@
 import numpy as np
 import pandas as pd
 import xgboost as xgb
+from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, f1_score, precision_score, classification_report
 from sklearn.preprocessing import StandardScaler
 
 
-def make_X_y(df):
-     #Create X and y
-    X = df.drop(columns=['home','away','date','outcome'],axis=1)
-    y = df['outcome']
-    # Split df into train, test set
-    X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size = 0.2, random_state = 42)
+def make_X_y_split(X_df, y_df, p, n):
+  # Split feature_df into train match set of size n from p to p + n, and test match of position p+n+1
+    X_train = X_df.iloc[p: p + n, :]
+    y_train = y_df.iloc[p: p + n]
+
+    X_test = X_df.iloc[p + n, :]
+    y_test = y_df.iloc[p + n]
     return X_train, X_test, y_train, y_test
+
+
+# Function to split the data in chronological order (i.e take n previous games and predict the following one, then iterate through data in steps of p)
+def make_preds_with_split(feature_df, model, n=5, p_increment=1):
+    p = 0
+    pred_list = []
+    match_outcomes = []
+    pipe = make_pipeline(StandardScaler(), model)
+
+    while p <= len(feature_df-(n+1)):
+      #Create X and y
+      X_df = feature_df.drop(columns=['home','away','date','outcome'],axis=1)
+      y_df = feature_df['outcome']
+
+      X_train, X_test, y_train, y_test = make_X_y_split(X_df, y_df, p, n)
+
+      pipe.fit(X_train, y_train)
+      res_preds = pipe.predict_proba(X_test)
+      pred_list.append(res_preds)
+      match_outcomes.append(y_test)
+      p += p_increment
+
+    return pred_list, match_outcomes
 
 
 def make_predict_df(df, model, split=True, chrono=False, random_state=42):
