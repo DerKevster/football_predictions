@@ -18,7 +18,7 @@ def make_X_y_split(X_df, y_df, p, n):
 
 
 # Function to split the data in chronological order (i.e take n previous games and predict the following one, then iterate through data in steps of p)
-def make_preds_with_split(feature_df, model, n=15, p_increment=1):
+def make_preds_with_split(feature_df, model, n=11, p_increment=1):
     p = 0
     pred_list = []
     scaler = StandardScaler()
