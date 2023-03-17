@@ -3,7 +3,6 @@ import numpy as np
 from python_files.ml_logic.feature_dataframe import make_feature_df
 from python_files.model_evaluation.betting_odds import make_betting_odds_df
 from python_files.model_evaluation.model_functions import make_predict_df
-from python_files.ml_logic.basemodel import make_basemodel
 
 
 def make_money (betting_odds_df, predict_df, bankroll=100, bet=1, threshold=1):

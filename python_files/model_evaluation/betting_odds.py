@@ -27,6 +27,7 @@ def make_betting_odds_df(league, season, proba=False):
 
     # Get follwing Columns: 'Date', 'HomeTeam', 'away_team', 'B365H', 'B365D', 'B365A', 'PSH', 'PSD', 'PSA'
     betting_odds_df = betting_odds_df[['Date', 'HomeTeam', 'AwayTeam', 'B365H', 'B365D', 'B365A', 'PSH', 'PSD', 'PSA', 'FTR']]
+    betting_odds_df.rename(columns={"Date": "date", "HomeTeam": "home", "AwayTeam": "away"})
 
     if proba:
         columns = ['B365H', 'B365D', 'B365A', 'PSH', 'PSD', 'PSA']
