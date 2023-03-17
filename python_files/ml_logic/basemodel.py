@@ -12,10 +12,10 @@ def make_random_forest():
     return random_forest
 
 def make_svc():
-    svc = SVC(kernel='rbf')
+    svc = SVC(kernel='rbf', probability=True)
     return svc
 
 def adaboost_svc():
-    svc = SVC(kernel='rbf')
+    svc = SVC(kernel='rbf', probability=True)
     adb_svc = AdaBoostClassifier(svc)
     return adb_svc
