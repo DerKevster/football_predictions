@@ -27,7 +27,7 @@ def make_betting_odds_df(league, season, proba=False):
 
     # Get follwing Columns: 'Date', 'HomeTeam', 'away_team', 'B365H', 'B365D', 'B365A', 'PSH', 'PSD', 'PSA'
     betting_odds_df = betting_odds_df[['Date', 'HomeTeam', 'AwayTeam', 'B365H', 'B365D', 'B365A', 'PSH', 'PSD', 'PSA', 'FTR']]
-    betting_odds_df.rename(columns={"Date": "date", "HomeTeam": "home", "AwayTeam": "away"})
+    betting_odds_df.rename(columns={"Date": "date", "HomeTeam": "home", "AwayTeam": "away"}, inplace=True)
 
     if proba:
         columns = ['B365H', 'B365D', 'B365A', 'PSH', 'PSD', 'PSA']
@@ -37,3 +37,11 @@ def make_betting_odds_df(league, season, proba=False):
 
     return betting_odds_df
     # To convert odds to percentage: decimal_percentage = (1 / odds)
+
+def make_multi_feature_df(leagues, seasons, proba=False):
+    full_df = pd.DataFrame()
+    for league in leagues:
+        for season in seasons:
+            season_df = make_betting_odds_df(league, season, proba=proba)
+            full_df = pd.concat([full_df, season_df], axis=0, ignore_index=True)
+    return full_df
