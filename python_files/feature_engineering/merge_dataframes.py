@@ -205,13 +205,6 @@ def make_merged_df(league, season):
   merged_df.drop(columns=["game_id", "competition_id", "season", "home_club_id", "away_club_id"], inplace=True)
   merged_df[['Date','round', 'HomeTeam', 'away_team', 'home_club_goals', 'away_club_goals', 'HC', 'AC', 'HS', 'HST', 'AS', 'AST']]
   merged_df['round'] = merged_df['round'].map(lambda round: round.strip(". Matchday")).map(lambda number: int(number))
-  for index, row in merged_df.iterrows():
-      if merged_df.at[index, "home_club_goals"] > merged_df.at[index, "away_club_goals"]:
-       merged_df.at[index, "outcome"] = 0
-      elif merged_df.at[index, "home_club_goals"] < merged_df.at[index, "away_club_goals"]:
-       merged_df.at[index, "outcome"] = 2
-      else:
-       merged_df.at[index, "outcome"] = 1
   merged_df=merged_df.rename(columns={'round':'matchday'})
   merged_df = merged_df.sort_values(by = 'Date')
   merged_df = merged_df.reset_index().drop(columns = "index")
@@ -219,7 +212,7 @@ def make_merged_df(league, season):
 
 # Choose a specific FIFA dataframe by giving a season
 def make_fifa_df(season):
-    sea = season[0:2]
+    sea = season[-2:]
     df = make_fifa_DataFrames()[f'FIFA{sea}_official_data.csv']
 
     # Clean the data
