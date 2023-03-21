@@ -1,1 +1,5 @@
-We're working on making lots of $$$$$$ by building a ML model to beat the bookies.
+Football Predictions
+
+The idea of the project is to gather lots of football statistics from the internet and use them to create features in a Pandas dataframe, that is then used to train a Machine Learning model, that can predict the outcome of future games based on the features.
+
+We used footballdata.co.uk, Transfermarkt and the video game FIfA as sources to create features about the teams performances in the last 5 games: Scored goals, Conceded goals, Corners, Shots, and Shots on target. In addition we added the goal difference for the whole season and the teams squad value as well as the average FIFA ratings of the teams players in the categories Defense, Midfield, Attack, and Bench. All of these features were included for the home team and the away team for each game. In total, every game had 22 features.
